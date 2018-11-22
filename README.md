@@ -1,10 +1,6 @@
-# NvmFramework
-
-=====================
+﻿# NvmFramework
 
 ## NvmCache
-
----
 
 [nvm-cache](https://github.com/sharkvik/nvm-framework/tree/master/projects/nvm-cache/src/lib)
 
@@ -16,10 +12,7 @@
 Второй параметр опциональный. Задает регистрозависимость идентификаторов/ключей значений
 
 ```javascript
-const nvmCache =
-	new NvmCache() <
-	Type >
-	((id: string) => this.http.get('http://localhost:4200/type/' + id));
+const nvmCache = new NvmCache()<Type>((id: string) => this.http.get('http://localhost:4200/type/' + id));
 ```
 
 ### get(id: string): NvmSubject<T>
@@ -85,18 +78,12 @@ nvmCache.keys;
 
 ## NvmStorage
 
----
-
 [nvm-storage](https://github.com/sharkvik/nvm-framework/tree/master/projects/nvm-storage/src/lib)
 
 ## NvmLoader
 
----
-
 [nvm-loader](https://github.com/sharkvik/nvm-framework/tree/master/projects/nvm-loader/src/lib)
 
 ## NvmQuagga
-
----
 
 [nvm-quagga](https://github.com/sharkvik/nvm-framework/tree/master/projects/nvm-quagga/src/lib)
