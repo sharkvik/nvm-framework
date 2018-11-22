@@ -1,0 +1,15 @@
+<div class="nvm-quagga">
+	<div class="nvm-quagga__video-controll" [style.width.px]="dimentions.width" [style.height.px]="dimentions.height">
+		<div class="nvm-quagga__camera">
+			<video #video muted></video>
+		</div>
+		<div class="nvm-quagga__output" [ngClass]="{'nvm-quagga__output--mirrow': mirrow}">
+			<canvas class="nvm-quagga__output-camera" #canvas [width]="dimentions.width" [height]="dimentions.height"></canvas>
+			<canvas class="nvm-quagga__output-scanner" #canvasBarCode [width]="dimentions.width" [height]="dimentions.height"></canvas>
+		</div>
+	</div>
+	<input *ngIf="reset" type="file" accept="image/*" capture="camera" (change)="readPhoto($event)" />
+	<ul style="text-align: left;">
+		<li *ngFor="let err of errors">({{err}})</li>
+	</ul>
+</div>

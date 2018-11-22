@@ -15,6 +15,32 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "paths": {
+      "nvm-cache": [
+        "dist/nvm-cache"
+      ],
+      "nvm-cache/*": [
+        "dist/nvm-cache/*"
+      ],
+      "nvm-loader": [
+        "dist/nvm-loader"
+      ],
+      "nvm-loader/*": [
+        "dist/nvm-loader/*"
+      ],
+      "nvm-storage": [
+        "dist/nvm-storage"
+      ],
+      "nvm-storage/*": [
+        "dist/nvm-storage/*"
+      ],
+      "nvm-quagga": [
+        "dist/nvm-quagga"
+      ],
+      "nvm-quagga/*": [
+        "dist/nvm-quagga/*"
+      ]
+    }
   }
 }

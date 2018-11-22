@@ -1,0 +1,27 @@
+.nvm-quagga{
+	box-sizing: border-box;
+	display: flex;
+    flex-flow: column nowrap;
+	align-items: center;
+	&__video-controll {
+		zoom: 0.5;
+	}
+	&__camera{
+		display: none;
+	}
+	&__output{
+		position: relative;
+		width: 100%;
+		height: 100%;
+		&-camera{
+			position: absolute;
+		}
+		&-scanner{
+			position: absolute;
+			z-index: 1;
+		}
+		&--mirrow{
+			transform: scale(-1, 1);
+		}
+	}
+}
