@@ -22,7 +22,9 @@ const nvmCache = new NvmCache<Type>((id: string) => this.http.get('http://localh
 В случае обновления данных все подписчики получат новые значения.
 
 ```javascript
-nvmCache.get(id).subscribe((newData) => { // do something });
+nvmCache.get(id).subscribe((newData) => {
+	// do something
+});
 ```
 
 ### getOnce(id: string): Observable<T>
@@ -31,7 +33,9 @@ nvmCache.get(id).subscribe((newData) => { // do something });
 В случае если значение было загружено в кэш ранее отдает значение, иначе запускает процесc получения данных, и после эмитит полученное значение
 
 ```javascript
-nvmCache.getOnce(id).subscribe((newData) => { // do something });
+nvmCache.getOnce(id).subscribe((newData) => {
+	// do something
+});
 ```
 
 ### refresh(id: string, data?: T): Observable<T>
