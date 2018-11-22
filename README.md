@@ -12,7 +12,7 @@
 Второй параметр опциональный. Задает регистрозависимость идентификаторов/ключей значений
 
 ```javascript
-const nvmCache = new NvmCache()<Type>((id: string) => this.http.get('http://localhost:4200/type/' + id));
+const nvmCache = new NvmCache<Type>((id: string) => this.http.get('http://localhost:4200/type/' + id));
 ```
 
 ### get(id: string): NvmSubject<T>
