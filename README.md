@@ -6,13 +6,28 @@
 
 Библиотека реализует кэширующий объект NvmCache, который предоставляет доступ к загруженному объекту и предоставлет возможность обновления по требованию.
 
+Установка
+
+```
+npm install nvm-cache --save
+```
+
+Импорт
+
+```
+import { NvmCache } from 'nvm-cache';
+```
+
 ### constructor(action: (id: string) => Observable<T>, ignoreCase: boolean = true)
 
 В констркутор нужно передать метод получения/обновления данных по ключу.
 Второй параметр опциональный. Задает регистрозависимость идентификаторов/ключей значений
 
 ```javascript
-const nvmCache = new NvmCache<Type>((id: string) => this.http.get('http://localhost:4200/type/' + id));
+const nvmCache =
+	new NvmCache() <
+	Type >
+	((id: string) => this.http.get('http://localhost:4200/type/' + id));
 ```
 
 ### get(id: string): NvmSubject<T>
@@ -22,7 +37,7 @@ const nvmCache = new NvmCache<Type>((id: string) => this.http.get('http://localh
 В случае обновления данных все подписчики получат новые значения.
 
 ```javascript
-nvmCache.get(id).subscribe((newData) => {
+nvmCache.get(id).subscribe(newData => {
 	// do something
 });
 ```
@@ -33,7 +48,7 @@ nvmCache.get(id).subscribe((newData) => {
 В случае если значение было загружено в кэш ранее отдает значение, иначе запускает процесc получения данных, и после эмитит полученное значение
 
 ```javascript
-nvmCache.getOnce(id).subscribe((newData) => {
+nvmCache.getOnce(id).subscribe(newData => {
 	// do something
 });
 ```
