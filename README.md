@@ -14,7 +14,7 @@ npm install nvm-cache --save
 
 Импорт
 
-```
+```typescript
 import { NvmCache } from 'nvm-cache';
 ```
 
@@ -23,7 +23,7 @@ import { NvmCache } from 'nvm-cache';
 В констркутор нужно передать метод получения/обновления данных по ключу.
 Второй параметр опциональный. Задает регистрозависимость идентификаторов/ключей значений
 
-```javascript
+```typescript
 const nvmCache = new NvmCache<Type>((id: string) => this.http.get('http://localhost:4200/type/' + id));
 ```
 
@@ -33,7 +33,7 @@ const nvmCache = new NvmCache<Type>((id: string) => this.http.get('http://localh
 В случае если значение было загружено в кэш ранее отдает значение, иначе запускает процесc получения данных, и после эмитит полученное значение
 В случае обновления данных все подписчики получат новые значения.
 
-```javascript
+```typescript
 nvmCache.get(id).subscribe(newData => {
 	// do something
 });
@@ -44,7 +44,7 @@ nvmCache.get(id).subscribe(newData => {
 Метод возвращает обычный Observable<T> без постоянной подписки.
 В случае если значение было загружено в кэш ранее отдает значение, иначе запускает процесc получения данных, и после эмитит полученное значение
 
-```javascript
+```typescript
 nvmCache.getOnce(id).subscribe(newData => {
 	// do something
 });
@@ -56,7 +56,7 @@ nvmCache.getOnce(id).subscribe(newData => {
 Запускает процесс обновления кэша, и, затем, эмитит обновленное значение для всех подписчиков NvmSubject<T> с соответствующим id.
 В случае если параметр data был заполнен, то обновляет кэш переданным значением, если пустой, то обновляет данные с помошью переданного в конструктор метода.
 
-```javascript
+```typescript
 nvmCache.refresh(id).subscribe();
 ```
 
@@ -64,7 +64,7 @@ nvmCache.refresh(id).subscribe();
 
 Чистит кэш для переданного идентификатора.
 
-```javascript
+```typescript
 nvmCache.remove(id);
 ```
 
@@ -72,7 +72,7 @@ nvmCache.remove(id);
 
 Чистит весь кэш.
 
-```javascript
+```typescript
 nvmCache.clear();
 ```
 
@@ -80,7 +80,7 @@ nvmCache.clear();
 
 Возвращает true/false в зависимости есть ключ/идентификатор в кэкшк или нет.
 
-```javascript
+```typescript
 nvmCache.has(id);
 ```
 
@@ -88,7 +88,7 @@ nvmCache.has(id);
 
 Возвращает массив строк - все ключи, для которых есть закэшированные значения.
 
-```javascript
+```typescript
 nvmCache.keys;
 ```
 
@@ -96,9 +96,120 @@ nvmCache.keys;
 
 [nvm-storage](https://github.com/sharkvik/nvm-framework/tree/master/projects/nvm-storage/src/lib)
 
+Обертка над IndexDb Api, предоставляющая более стандартный интерфейс
+Установка
+
+```
+npm install nvm-storage --save
+```
+
+Интеграция
+
+```typescript
+import { IDBWrapperService } from 'nvm-storage';
+
+@Injectable({
+	providedIn: 'root'
+})
+export class StorageService {
+	private static readonly DB_NAME: string = 'sample-db';
+	public isActive: boolean = false;
+
+	constructor(private _db: IDBWrapperService) {
+	}
+}
+
+```
+### addMigration(migration: (db: IDBDatabase, ev: IDBRequest) => void): void
+Регистрирует миграции базы, для поддержания актуальной версии.
+Регистрация должна производиться до установления соединения.
+
+```typescript
+this._db.addMigration((db: IDBDatabase, ev: IDBRequest) => {
+	db.createObjectStore('Entity', { autoIncrement: true });
+});
+this._db.addMigration((db: IDBDatabase, ev: IDBRequest) => {
+	db.createObjectStore('Log', { autoIncrement: true });
+});
+```
+
+### open(name): Subject<boolean>
+Принимает в качестве параметра имя базы;
+Открывает соединение с базой и высталяет флаг isActive в true если все прошло успешно.
+Если версия базы ниже количества зарегистрированных миграций - обновляет базу.
+Возвращает `Subject<boolean>` который эмитит значение true/false по завершении соединения.
+
+```typescript
+this._db.open(DB_NAME)
+	.subscribe((result: booleean) => {
+		this.isActive = true;
+		console.log(result ? 'success' : 'fail');
+	});
+```
+
+### insert(obj: IdItem): Observable<IdItem>
+Реализует добавление элемента в базу.
+Все сущности в базе должны реализовывать интерфейс IdItem.
+Данные добавляются в существующую таблицу по имени класса.
+В примере это будет таблица 'Entity'
+
+```typescript
+export class Entity implements IdItem {
+	constructor(public id: number, public name: string)
+}
+const item = new Entity(1, 'Иванов Иван Иванович')
+this._db.insert(item)
+	.subscribe((result: IdItem) => {
+		console.log(`объект добавлен успешно с id: ${result.id}`);
+	});
+```
+
+### update(obj: IdItem, key: number): Observable<IdItem>
+Реализует обновление элемента в базе
+
+```typescript
+item.name = 'Петров Петр Петрович';
+this._db.update(item, 1)
+	.subscribe((result: IdItem) => {
+		console.log(`объект с id: ${result.id} обновлен: ${result.name}`);
+	});
+```
+
+### select<T>(table: string, query?: IDBKeyRange): Observable<Array<T>>
+Выборка из базы
+
+```typescript
+this._db.select<Entity>('Entity', IDBKeyRange.bound(1, 20))
+	.subscribe((items: Entity[]) => {
+		console.log(`Найдено элементов в базе с id от 1 до 20: ${items.length} штук`);
+	});
+```
+
+### delete(table: string, key: string): Observable<boolean>
+Реализует удаление из базы.
+
+```typescript
+this._db.delete('Entity', '1')
+	.subscribe((result: boolean) => {
+		console.log(`объект с id: ${result.id} удален ${!result ? 'не ' : '' }успешно`);
+	});
+```
+
 ## NvmLoader
 
 [nvm-loader](https://github.com/sharkvik/nvm-framework/tree/master/projects/nvm-loader/src/lib)
+
+Модуль осуществляет lazy загрузку модулей без стандартного рутера.
+
+Установка
+
+```
+npm install nvm-loader --save
+```
+
+Использование:
+
+[Пример](https://github.com/sharkvik/test-lib)
 
 ## NvmQuagga
 
