@@ -1,8 +1,8 @@
 {
 	"name": "nvm-quagga",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "quagga wrapper",
-	"homepage": "https://github.com/sharkvik",
+	"homepage": "https://github.com/sharkvik/nvm-framework/blob/master/README.md",
 	"bugs": {
 		"email": "shark_vik@inbox.ru"
 	},

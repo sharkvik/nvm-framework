@@ -1,18 +1,18 @@
 {
-  "name": "nvm-loader",
-  "version": "0.0.11",
-  "description": "lazy loading modules without router",
-  "homepage": "https://github.com/shark_vik",
-  "bugs": {
-    "email": "shark_vik@inbox.ru"
-  },
-  "author": {
-    "name": "Viktor",
-    "email": "shark_vik@inbox.ru"
-  },
-  "license": "MIT",
-  "peerDependencies": {
-    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
-    "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
-  }
+	"name": "nvm-loader",
+	"version": "0.0.12",
+	"description": "lazy loading modules without router",
+	"homepage": "https://github.com/sharkvik/nvm-framework/blob/master/README.md",
+	"bugs": {
+		"email": "shark_vik@inbox.ru"
+	},
+	"author": {
+		"name": "Viktor",
+		"email": "shark_vik@inbox.ru"
+	},
+	"license": "MIT",
+	"peerDependencies": {
+		"@angular/common": "^6.0.0-rc.0 || ^6.0.0",
+		"@angular/core": "^6.0.0-rc.0 || ^6.0.0"
+	}
 }
