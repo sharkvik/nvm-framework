@@ -1,6 +1,6 @@
 {
 	"name": "nvm-loader",
-	"version": "0.0.12",
+	"version": "0.0.13",
 	"description": "lazy loading modules without router",
 	"homepage": "https://github.com/sharkvik/nvm-framework/blob/master/README.md",
 	"bugs": {
