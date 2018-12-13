@@ -10,14 +10,23 @@ import { EntityChanges } from './EntityChanges';
 export class EntityChagesProvider {
 	private _registrations: Subscription[] = [];
 	private _keys: Map<string, string[]> = new Map<string, string[]>();
-	private _subscribers: Map<string, Subject<EntityChanges<IEntity<any>>[]>> = new Map<string, Subject<EntityChanges<IEntity<any>>[]>>();
+	private _subscribers: Map<string, Subject<EntityChanges<IEntity<any>>>> = new Map<string, Subject<EntityChanges<IEntity<any>>>>();
 	private _subscriptions: Map<string, Subscription> = new Map<string, Subscription>();
 
 	constructor() { }
 
 	public register<T>(entity: IEntity<T>): void {
-		this._registrations.push(entity.changed.subscribe((changes: EntityChanges<IEntity<T>>[]) => {
-			// что-то...
+		this._registrations.push(entity.changed.subscribe((changes: EntityChanges<IEntity<T>>) => {
+			const entityId = changes.entity.id.toUpperCase();
+			if (!this._keys.has(entityId)) {
+				return;
+			}
+			const subscriptionIds = this._keys.get(entityId);
+			subscriptionIds.forEach((s) => {
+				if (this._subscribers.has(s)) {
+					this._subscribers.get(s).next(changes);
+				}
+			});
 		}));
 	}
 
