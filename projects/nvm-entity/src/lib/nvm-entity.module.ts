@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 
 @NgModule({
-	imports: [
-	],
+	imports: [],
 	declarations: [],
 	exports: []
 })
-export class NvmEntityModule { }
+export class NvmEntityModule {}

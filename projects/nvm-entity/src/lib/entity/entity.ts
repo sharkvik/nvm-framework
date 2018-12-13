@@ -1,10 +1,10 @@
 import { Subject } from 'rxjs';
-import { EntityChanges } from '../entity-changes/EntityChanges';
+import { EntityChanges } from '../entity-changes/entity-changes';
 import { FieldChanges } from '../entity-changes/field-changes';
 export class IEntity<T> {
 	public id: string;
-	protected _data: T
-	public changed: Subject<EntityChanges<IEntity<T>>>;
+	protected _data: T;
+	public changed: Subject<EntityChanges<T>>;
 
 	public refresh(data: T): void {
 		const changes = [];
@@ -14,9 +14,9 @@ export class IEntity<T> {
 				changes.push(new FieldChanges(key, this._data[key], data[key]));
 			}
 			this._data[key] = data[key];
-		})
+		});
 		if (changes.length > 0) {
-			this.changed.next(new EntityChanges(this, changes));
+			this.changed.next(new EntityChanges<T>(this, changes));
 		}
 	}
 }
