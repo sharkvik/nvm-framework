@@ -4,12 +4,14 @@ import { FieldChanges } from '../entity-changes/field-changes';
 export class IEntity<T> {
 	public id: string;
 	protected _data: T;
-	public changed: Subject<EntityChanges<T>>;
+	public changed: Subject<EntityChanges<T>> = new Subject<EntityChanges<T>>();
 
 	public refresh(data: T): void {
 		const changes = [];
-		Object.keys((key: string) => {
-			let changes = null;
+		Object.keys(data).forEach((key: string) => {
+			if (key === 'changed' || key === '_data' || key === 'id') {
+				return;
+			}
 			if (JSON.stringify(data[key]) !== JSON.stringify(this._data[key])) {
 				changes.push(new FieldChanges(key, this._data[key], data[key]));
 			}
