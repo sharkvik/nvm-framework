@@ -3,17 +3,16 @@ import { Observable, Subscriber } from 'rxjs';
 import { isNullOrUndefined } from 'util';
 
 export class NvmCache<T> {
-	private _cache: Map<string, NvmSubject<T>> = new Map<
-		string,
-		NvmSubject<T>
-	>();
+	private _cache: Map<string, NvmSubject<T>> = new Map<string, NvmSubject<T>>();
+
 	constructor(
 		private _action: (id: string) => Observable<T>,
 		private _ignoreCase: boolean = true
 	) {}
+
 	public get = (id: string): NvmSubject<T> => this._get(this._prepareKey(id));
-	public getOnce = (id: string): Observable<T> =>
-		this._get(this._prepareKey(id)).getOnce();
+	public getOnce = (id: string): Observable<T> => this._get(this._prepareKey(id)).getOnce();
+
 	public refresh = (id: string, data?: T): Observable<T> => {
 		id = this._prepareKey(id);
 		return !isNullOrUndefined(data)
@@ -38,17 +37,14 @@ export class NvmCache<T> {
 		return keys;
 	}
 
-	public has(id: string): boolean {
-		id = this._prepareKey(id);
-		return this._cache.has(id);
-	}
-
-	public clear = (): void =>
-		Array.from(this._cache.keys()).forEach(this.remove);
+	public has = (id: string): boolean => this._cache.has(this._prepareKey(id));
+	public clear = (): void => Array.from(this._cache.keys()).forEach(this.remove);
 
 	private _onUpdate = (s: Subscriber<T>, id: string, data: T) => {
 		if (!this._cache.has(id)) {
-			this._emit(s, data);
+			this._cacheItem(id, data)
+				.getOnce()
+				.subscribe((data: T) => this._emit(s, data));
 			return;
 		}
 		this._cache
@@ -62,6 +58,7 @@ export class NvmCache<T> {
 			this._cacheItem(id)
 				.getOnce()
 				.subscribe((data: T) => this._emit(s, data));
+			return;
 		}
 		this._cache
 			.get(id)
@@ -85,10 +82,6 @@ export class NvmCache<T> {
 		return item;
 	}
 
-	private _get = (id: string): NvmSubject<T> =>
-		this._cache.has(id) ? this._cache.get(id) : this._cacheItem(id);
-
-	private _prepareKey = (key: string): string => {
-		return this._ignoreCase ? key.toUpperCase() : key;
-	};
+	private _get = (id: string): NvmSubject<T> => this._cache.has(id) ? this._cache.get(id) : this._cacheItem(id);
+	private _prepareKey = (key: string): string => this._ignoreCase ? key.toUpperCase() : key;
 }
