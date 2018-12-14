@@ -1,14 +1,12 @@
-import { isNil } from 'lodash/isNil';
 import { IEntity } from './entity/entity';
 import { EntityChagesProvider } from './entity-chages.provider';
-import { Subject, Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 import { FieldChanges } from './entity-changes/field-changes';
 import { EntityChanges } from './entity-changes/entity-changes';
-import { reduce } from 'rxjs/operators';
 
 export class EntityEventHandler<T> {
 	private _eventEmiters: Map<string, Subject<FieldChanges>> = new Map<string, Subject<FieldChanges>>();
-	private _combinedEventEmiters: Map<string, Subject<FieldChanges>> = new Map<string, Subject<FieldChanges>>();
+	private _entityEventEmiter: Subject<EntityChanges<T>> = new Subject<EntityChanges<T>>();
 	private _entitySubscription: string;
 
 	constructor(private _changesProvider: EntityChagesProvider, private _entity: IEntity<T>) {
@@ -23,40 +21,18 @@ export class EntityEventHandler<T> {
 		return null;
 	}
 
-	public fieldsHandler(fields: string[]): Observable<EntityChanges<T>> {
-		const subject = this._getCombinedSubject(fields);
-		if (isNil(subject)) {
-			return null;
-		}
-		// TODO: не будет работать.
-		return subject.pipe(reduce((acc: EntityChanges<T>, val: FieldChanges) => {
-			acc.changes.push(val);
-			return acc;
-		}, new EntityChanges<T>(this._entity, [])));
+	public entityHandler(): Subject<EntityChanges<T>> {
+		return this._entityEventEmiter;
 	}
 
-	private _getCombinedSubject(fields: string[]): Subject<FieldChanges> {
-		const subjects = fields
-			.map((field: string) => this.fieldHandler(field))
-			.filter((s: Subject<FieldChanges>) => !isNil(s));
-		if (subjects.length === 0) {
-			return null;
-		}
-		const key = fields.join(';').toUpperCase();
-		if (this._combinedEventEmiters.has(key)) {
-			return this._combinedEventEmiters.get(key);
-		}
-		const combinedSubject = new Subject<FieldChanges>();
-		subjects.forEach((s: Subject<FieldChanges>) => {
-			s.subscribe((c: FieldChanges) => {
-				combinedSubject.next(c)
-			});
-		})
-		this._combinedEventEmiters.set(key, combinedSubject);
-		return this._combinedEventEmiters.get(key);
+	public destroy(): void {
+		this._eventEmiters.forEach((val: Subject<FieldChanges>) => val.complete());
+		this._entityEventEmiter.complete();
+		this._changesProvider.unsubscribe(this._entitySubscription);
 	}
 
 	private _notifyAll = (changes: EntityChanges<T>): void => {
+		this._entityEventEmiter.next(changes);
 		changes.changes.forEach(this._notify)
 	}
 
@@ -65,10 +41,5 @@ export class EntityEventHandler<T> {
 			return;
 		}
 		this._eventEmiters.get(changing.field).next(changing);
-	}
-
-	public destroy(): void {
-		this._eventEmiters.forEach((val: Subject<FieldChanges>) => val.complete());
-		this._changesProvider.unsubscribe(this._entitySubscription);
 	}
 }
