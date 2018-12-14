@@ -1,6 +1,6 @@
 import { NvmSubject } from './nvm-subject';
 import { Observable, Subscriber } from 'rxjs';
-import isNil from 'lodash/isNil';
+import { isNullOrUndefined } from 'util';
 
 export class NvmCache<T> {
 	private _cache: Map<string, NvmSubject<T>> = new Map<
@@ -16,7 +16,7 @@ export class NvmCache<T> {
 		this._get(this._prepareKey(id)).getOnce();
 	public refresh = (id: string, data?: T): Observable<T> => {
 		id = this._prepareKey(id);
-		return !isNil(data)
+		return !isNullOrUndefined(data)
 			? new Observable(s => this._onUpdate(s, id, data))
 			: new Observable(s => this._onRefresh(s, id));
 	};
@@ -77,7 +77,7 @@ export class NvmCache<T> {
 	private _cacheItem(id: string, itemData?: T): NvmSubject<T> {
 		const item = new NvmSubject<T>(() => this._action(id));
 		this._cache.set(id, item);
-		if (!isNil(itemData)) {
+		if (!isNullOrUndefined(itemData)) {
 			item.next(itemData);
 		} else {
 			item.refresh().subscribe();

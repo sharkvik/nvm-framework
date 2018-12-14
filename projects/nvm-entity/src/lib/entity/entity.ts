@@ -6,6 +6,10 @@ export class IEntity<T> {
 	protected _data: T;
 	public changed: Subject<EntityChanges<T>> = new Subject<EntityChanges<T>>();
 
+	constructor(data: T) {
+		this._data = data;
+	}
+
 	public refresh(data: T): void {
 		const changes = [];
 		Object.keys(data).forEach((key: string) => {

@@ -1,6 +1,6 @@
 import { Observable, ReplaySubject, Subscriber, Subject } from 'rxjs';
 import debounce from 'lodash.debounce';
-import isNil from 'lodash/isNil';
+import { isNullOrUndefined } from 'util';
 
 export class NvmSubject<T> extends ReplaySubject<T> {
 	private _action: () => Observable<T>;
@@ -35,7 +35,7 @@ export class NvmSubject<T> extends ReplaySubject<T> {
 
 	public getOnce(): Observable<T> {
 		return new Observable<T>(s => {
-			if (!isNil(this._lastValue)) {
+			if (!isNullOrUndefined(this._lastValue)) {
 				this._emit(s);
 				return;
 			}
