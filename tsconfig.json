@@ -40,6 +40,12 @@
       ],
       "nvm-quagga/*": [
         "dist/nvm-quagga/*"
+      ],
+      "nvm-entity": [
+        "dist/nvm-entity"
+      ],
+      "nvm-entity/*": [
+        "dist/nvm-entity/*"
       ]
     }
   }
