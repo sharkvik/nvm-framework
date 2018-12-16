@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable, Subscriber } from 'rxjs';
 import { IdItem } from './IdItem';
-import { isNullOrUndefined } from 'util';
+import isNil from 'lodash/isNil';
 
 @Injectable({
 	providedIn: 'root'
@@ -24,7 +24,7 @@ export class IDBWrapperService {
 		this._connection.onsuccess = (ev: Event) => {
 			const target = ev.target as IDBRequest;
 			this._db = target.result;
-			if (!isNullOrUndefined(target)) {
+			if (!isNil(target)) {
 				this.isActive = true;
 			}
 			isActive$.next(this.isActive);
@@ -49,7 +49,7 @@ export class IDBWrapperService {
 	public insert(obj: IdItem): Observable<IdItem> {
 		const store = this._findTable(obj.constructor.name);
 		return new Observable<IdItem>((result$: Subscriber<IdItem>) => {
-			if (isNullOrUndefined(store)) {
+			if (isNil(store)) {
 				result$.error(`Store ${obj.constructor.name} does not exists.`);
 				result$.complete();
 				return;
@@ -74,7 +74,7 @@ export class IDBWrapperService {
 	public delete(table: string, key: string): Observable<boolean> {
 		const store = this._findTable(table);
 		return new Observable<boolean>((result$: Subscriber<boolean>) => {
-			if (isNullOrUndefined(store)) {
+			if (isNil(store)) {
 				result$.next(false);
 				result$.complete();
 				return;
@@ -94,7 +94,7 @@ export class IDBWrapperService {
 	public update(obj: IdItem, key: number): Observable<IdItem> {
 		const store = this._findTable(obj.constructor.name);
 		return new Observable<IdItem>((result$: Subscriber<IdItem>) => {
-			if (isNullOrUndefined(store)) {
+			if (isNil(store)) {
 				result$.next(null);
 				result$.complete();
 				return;
@@ -114,7 +114,7 @@ export class IDBWrapperService {
 	public select<T>(table: string, query?: IDBKeyRange): Observable<Array<T>> {
 		const store = this._findTable(table);
 		return new Observable<Array<T>>((result$: Subscriber<Array<T>>) => {
-			if (isNullOrUndefined(store)) {
+			if (isNil(store)) {
 				result$.next(null);
 				result$.complete();
 				return;

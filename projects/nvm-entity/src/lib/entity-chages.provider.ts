@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IEntity } from './entity/entity';
 import { Subscription, Subject } from 'rxjs';
 import { EntityChanges } from './entity-changes/entity-changes';
-import { isNullOrUndefined } from 'util';
+import isNil from 'lodash/isNil';
 
 @Injectable({
 	providedIn: 'root'
@@ -67,7 +67,7 @@ export class EntityChagesProvider {
 	};
 
 	private _unsubscribe = (s: Subscription): void => {
-		if (isNullOrUndefined(s) || s.closed) {
+		if (isNil(s) || s.closed) {
 			return;
 		}
 		s.unsubscribe();
