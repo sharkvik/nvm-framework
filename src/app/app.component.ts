@@ -5,6 +5,7 @@ import { interval, Observable } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { NvmCache } from 'projects/nvm-cache/src/lib/models/nvm-cache';
 import isNil from 'lodash/isNil';
+import { NvmSettingsService } from 'nvm-settings';
 
 export class Model extends IEntity<{id: string, name: string, type: string}> {
 	constructor(public id: string, public name: string, public type: string) {
@@ -55,7 +56,13 @@ export class AppComponent implements OnInit {
 		'3.2'
 	];
 
-	constructor(private _eehp: EntityEventHandlerProvider, private _ecp: EntityChagesProvider) {
+	constructor(
+		private _eehp: EntityEventHandlerProvider,
+		private _ecp: EntityChagesProvider,
+		private _setings: NvmSettingsService
+	) {
+		const test = this._setings.get<string>('test');
+		console.log(test);
 		this._initEventHandlers();
 		interval(5000)
 			.pipe(takeWhile(val => val <= 5))

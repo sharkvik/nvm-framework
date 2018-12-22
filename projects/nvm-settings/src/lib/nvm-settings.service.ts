@@ -18,14 +18,14 @@ export class NvmSettingsService {
 			this._settings = new NvmSubject(() =>
 				this._http
 					.get(settingsUrl)
-					.pipe(tap(res => (this._syncSettings = res)))
+					.pipe(tap(res => this._syncSettings = res))
 			);
 		}
 		return this._settings.getOnce().toPromise();
 	}
 
 	public getAsync<T>(key: string): Observable<T | null> {
-		return !!this._settings ? this._settings.getOnce() : of(null);
+		return !!this._settings ? this._settings.getOnce().pipe(tap((val: any) => val[key])) : of(null);
 	}
 
 	public get<T>(key: string): T | null {
