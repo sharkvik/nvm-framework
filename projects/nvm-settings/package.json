@@ -1,6 +1,6 @@
 {
 	"name": "nvm-settings",
-	"version": "0.0.1",
+	"version": "0.0.4",
 	"description": "settings loader",
 	"homepage": "https://github.com/sharkvik/nvm-framework/blob/master/README.md",
 	"bugs": {
@@ -11,11 +11,12 @@
 		"email": "shark_vik@inbox.ru"
 	},
 	"license": "MIT",
+	"dependencies": {
+		"nvm-cache": "0.0.10"
+	},
 	"peerDependencies": {
 		"@angular/common": "^6.0.0-rc.0 || ^6.0.0",
-		"@angular/core": "^6.0.0-rc.0 || ^6.0.0"
-	},
-	"dependencies": {
+		"@angular/core": "^6.0.0-rc.0 || ^6.0.0",
 		"nvm-cache": "0.0.10"
 	}
 }

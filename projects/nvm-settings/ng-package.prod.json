@@ -3,5 +3,8 @@
 	"dest": "../../dist/nvm-settings",
 	"lib": {
 		"entryFile": "src/public_api.ts"
-	}
+	},
+	"whitelistedNonPeerDependencies": [
+		"nvm-cache"
+	]
 }
