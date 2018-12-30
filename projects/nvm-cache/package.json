@@ -1,6 +1,6 @@
 {
 	"name": "nvm-cache",
-	"version": "0.0.10",
+	"version": "0.0.11",
 	"description": "caching object",
 	"homepage": "https://github.com/sharkvik/nvm-framework/blob/master/README.md",
 	"bugs": {
