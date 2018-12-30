@@ -49,6 +49,7 @@ export class AppComponent implements OnInit {
 		'calculate 2',
 		'2.2',
 		'2.2',
+		'ok',
 		'calculate 2',
 		'2.3',
 		'calculate 3',
@@ -96,13 +97,13 @@ export class AppComponent implements OnInit {
 				});
 			});																			// вывод 8 - 2x
 			this._cache.refresh('1', '1.5').subscribe();								// вывод 6
-			setTimeout(() => this._cache.refresh('1').subscribe(), 100);				// пропущен, так как прошло только 100мс
+			setTimeout(() => this._cache.refresh('1').subscribe(() => this._result.push('ok')), 100);				// пропущен, так как прошло только 100мс
 			setTimeout(() => this._cache.refresh('2').subscribe(() => {					// вывод 9 - 1x
 				this._cache.refresh('3').subscribe(() => {
 					if (JSON.stringify(this._control) === JSON.stringify(this._result)) {
 						console.log('pass');
 					} else {
-						console.log('fail');
+						console.log(`fail: ${JSON.stringify(this._result)}`);
 					}
 				});																		// вывод 10 - 2x
 			}), 500);

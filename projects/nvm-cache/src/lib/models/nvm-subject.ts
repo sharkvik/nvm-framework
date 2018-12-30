@@ -1,4 +1,4 @@
-import { Observable, ReplaySubject, Subscriber, Subject } from 'rxjs';
+import { Observable, ReplaySubject, Subscriber, Subject, of } from 'rxjs';
 import debounce from 'lodash.debounce';
 import isNil from 'lodash/isNil';
 
@@ -7,16 +7,7 @@ export class NvmSubject<T> extends ReplaySubject<T> {
 	private _lastValue: T;
 	private _tempSubjects: Subject<T>[] = [];
 	private _refreshStarted: boolean = false;
-	private _onRefresh = debounce(() => {
-		this._action()
-			.subscribe((data: T) => {
-				this.next(data);
-				this._emitTempSubject();
-			}, (err) => {
-				this._emitTempSubject();
-				console.error(err);
-			});
-	}, 300);
+	private _lastRefresh: number;
 
 	constructor(action: () => Observable<T>) {
 		super(1);
@@ -25,11 +16,14 @@ export class NvmSubject<T> extends ReplaySubject<T> {
 	}
 
 	public refresh(): Observable<T> {
+		if (!isNil(this._lastRefresh) && this._lastRefresh >= new Date().getTime() - 300) {
+			return of(this._lastValue)
+		}
 		const subj = new Subject<T>();
 		this._tempSubjects.push(subj);
 		if (!this._refreshStarted) {
 			this._refreshStarted = true;
-			this._onRefresh();
+			setTimeout(() => this._onRefresh());
 		}
 		return subj;
 	}
@@ -50,6 +44,18 @@ export class NvmSubject<T> extends ReplaySubject<T> {
 			this.refresh().subscribe(() => this._emit(s));
 		});
 	}
+
+	private _onRefresh = () => {
+		this._action()
+			.subscribe((data: T) => {
+				this._lastRefresh = new Date().getTime();
+				this.next(data);
+				this._emitTempSubject();
+			}, (err) => {
+				this._emitTempSubject();
+				console.error(err);
+			});
+	};
 
 	private _emit = (s: Subscriber<T>, data?: T): void => {
 		s.next(data || this._lastValue);
