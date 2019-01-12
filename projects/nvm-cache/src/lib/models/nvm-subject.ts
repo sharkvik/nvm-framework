@@ -1,5 +1,4 @@
 import { Observable, ReplaySubject, Subscriber, Subject, of } from 'rxjs';
-import debounce from 'lodash.debounce';
 import isNil from 'lodash/isNil';
 
 export class NvmSubject<T> extends ReplaySubject<T> {
@@ -16,7 +15,7 @@ export class NvmSubject<T> extends ReplaySubject<T> {
 	}
 
 	public refresh(): Observable<T> {
-		if (!isNil(this._lastRefresh) && this._lastRefresh >= new Date().getTime() - 300) {
+		if (this._skipRefresh()) {
 			return of(this._lastValue)
 		}
 		const subj = new Subject<T>();
@@ -69,5 +68,11 @@ export class NvmSubject<T> extends ReplaySubject<T> {
 		});
 		this._refreshStarted = false;
 		this._tempSubjects = [];
+	}
+
+	private _skipRefresh = (): boolean => {
+		return !isNil(this._lastValue)
+			&& !isNil(this._lastRefresh)
+			&& this._lastRefresh >= new Date().getTime() - 300
 	}
 }
