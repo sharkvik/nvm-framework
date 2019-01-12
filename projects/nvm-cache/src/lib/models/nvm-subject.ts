@@ -1,18 +1,12 @@
-import { Observable, ReplaySubject, Subscriber, Subject } from 'rxjs';
-import debounce from 'lodash.debounce';
+import { Observable, ReplaySubject, Subscriber, Subject, of } from 'rxjs';
 import isNil from 'lodash/isNil';
 
 export class NvmSubject<T> extends ReplaySubject<T> {
 	private _action: () => Observable<T>;
 	private _lastValue: T;
-	private _tempSubject: Subject<T>;
-	private _onRefresh = debounce(() => {
-		this._action()
-			.subscribe((data: T) => {
-				this.next(data);
-				this._emitTempSubject();
-			});
-	}, 300);
+	private _tempSubjects: Subject<T>[] = [];
+	private _refreshStarted: boolean = false;
+	private _lastRefresh: number;
 
 	constructor(action: () => Observable<T>) {
 		super(1);
@@ -21,44 +15,64 @@ export class NvmSubject<T> extends ReplaySubject<T> {
 	}
 
 	public refresh(): Observable<T> {
-		if (isNil(this._tempSubject)) {
-			this._tempSubject = new Subject<T>();
+		if (this._skipRefresh()) {
+			return of(this._lastValue)
 		}
-		this._onRefresh();
-		return this._tempSubject;
+		const subj = new Subject<T>();
+		this._tempSubjects.push(subj);
+		if (!this._refreshStarted) {
+			this._refreshStarted = true;
+			setTimeout(() => this._onRefresh());
+		}
+		return subj;
 	}
 
 	public update(data: T): Observable<T> {
-		return new Observable<T>((s) => {
+		return new Observable<T>(s => {
 			this.next(data);
 			this._emit(s);
 		});
 	}
 
 	public getOnce(): Observable<T> {
-		return new Observable<T>((s) => {
+		return new Observable<T>(s => {
 			if (!isNil(this._lastValue)) {
 				this._emit(s);
 				return;
 			}
-			const subs = this.asObservable()
-				.subscribe(() => {
-					this._emit(s);
-					if (!subs.closed) {
-						subs.unsubscribe();
-					}
-				});
+			this.refresh().subscribe(() => this._emit(s));
 		});
 	}
+
+	private _onRefresh = () => {
+		this._action()
+			.subscribe((data: T) => {
+				this._lastRefresh = new Date().getTime();
+				this.next(data);
+				this._emitTempSubject();
+			}, (err) => {
+				this._emitTempSubject();
+				console.error(err);
+			});
+	};
 
 	private _emit = (s: Subscriber<T>, data?: T): void => {
 		s.next(data || this._lastValue);
 		s.complete();
-	}
+	};
 
 	private _emitTempSubject(): void {
-		this._tempSubject.next(this._lastValue);
-		this._tempSubject.complete();
-		this._tempSubject = null;
+		this._tempSubjects.forEach(s => {
+			s.next(this._lastValue);
+			s.complete();
+		});
+		this._refreshStarted = false;
+		this._tempSubjects = [];
+	}
+
+	private _skipRefresh = (): boolean => {
+		return !isNil(this._lastValue)
+			&& !isNil(this._lastRefresh)
+			&& this._lastRefresh >= new Date().getTime() - 300
 	}
 }

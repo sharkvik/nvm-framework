@@ -304,6 +304,86 @@
           }
         }
       }
+    },
+    "nvm-entity": {
+      "root": "projects/nvm-entity",
+      "sourceRoot": "projects/nvm-entity/src",
+      "projectType": "library",
+      "prefix": "nvm",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/nvm-entity/tsconfig.lib.json",
+            "project": "projects/nvm-entity/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/nvm-entity/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/nvm-entity/src/test.ts",
+            "tsConfig": "projects/nvm-entity/tsconfig.spec.json",
+            "karmaConfig": "projects/nvm-entity/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/nvm-entity/tsconfig.lib.json",
+              "projects/nvm-entity/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "nvm-settings": {
+      "root": "projects/nvm-settings",
+      "sourceRoot": "projects/nvm-settings/src",
+      "projectType": "library",
+      "prefix": "nvm",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/nvm-settings/tsconfig.lib.json",
+            "project": "projects/nvm-settings/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/nvm-settings/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/nvm-settings/src/test.ts",
+            "tsConfig": "projects/nvm-settings/tsconfig.spec.json",
+            "karmaConfig": "projects/nvm-settings/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/nvm-settings/tsconfig.lib.json",
+              "projects/nvm-settings/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "nvm-framework"
