@@ -120,10 +120,10 @@ export class AppComponent implements OnInit {
 		this._ecp.register(this._model);
 		const nameSubj = this._eehp.createHandler(this._model).fieldHandler('name');
 		nameSubj.subscribe((c: FieldChanges) => {
-				console.log(`field: 'name'; entityId: ${this._model.id}; prev: ${c.previosValue}; cur: ${c.currentValue}`);
+				console.log(`field: 'name'; entityId: ${this._model.id}; prev: ${c.previousValue}; cur: ${c.currentValue}`);
 			});
 		nameSubj.subscribe((c: FieldChanges) => {
-				console.log(`*field: 'name'; entityId: ${this._model.id}; prev: ${c.previosValue}; cur: ${c.currentValue}`);
+				console.log(`*field: 'name'; entityId: ${this._model.id}; prev: ${c.previousValue}; cur: ${c.currentValue}`);
 			});
 
 		const typeSubj = this._eehp.createHandler(this._model).fieldHandler('type');
@@ -131,7 +131,7 @@ export class AppComponent implements OnInit {
 				if(c.currentValue === 'c3') {
 					this._ecp.clear();
 				}
-				console.log(`field: 'type'; entityId: ${this._model.id}; prev: ${c.previosValue}; cur: ${c.currentValue}`);
+				console.log(`field: 'type'; entityId: ${this._model.id}; prev: ${c.previousValue}; cur: ${c.currentValue}`);
 			});
 
 		const entitySubj = this._eehp.createHandler(this._model).entityHandler()

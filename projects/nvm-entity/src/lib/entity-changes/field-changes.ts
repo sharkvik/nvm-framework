@@ -1,3 +1,3 @@
 export class FieldChanges {
-	constructor(public field: string, public previosValue: any, public currentValue: any) {}
+	constructor(public field: string, public previousValue: any, public currentValue: any) {}
 }
