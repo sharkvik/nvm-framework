@@ -384,6 +384,46 @@
           }
         }
       }
+    },
+    "nvm-charts": {
+      "root": "projects/nvm-charts",
+      "sourceRoot": "projects/nvm-charts/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/nvm-charts/tsconfig.lib.json",
+            "project": "projects/nvm-charts/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/nvm-charts/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/nvm-charts/src/test.ts",
+            "tsConfig": "projects/nvm-charts/tsconfig.spec.json",
+            "karmaConfig": "projects/nvm-charts/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/nvm-charts/tsconfig.lib.json",
+              "projects/nvm-charts/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "nvm-framework"
