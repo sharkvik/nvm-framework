@@ -1,6 +1,6 @@
-<div class="chart">
+<div class="chart" [ngClass]="{'donut': type==5 || type==3}">
 	<canvas #canvas [height]="height" [width]="width"></canvas>
-	<div class="doughnut__additional" *ngIf="type==5">
+	<div class="doughnut__additional" *ngIf="type==5 || type==3">
 		<div class="doughnut__amount" [innerText]="percents + '%'"></div>
 		<div class="doughnut__info" [innerText]="info"></div>
 	</div>

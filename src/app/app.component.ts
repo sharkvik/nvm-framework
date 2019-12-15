@@ -1,11 +1,15 @@
 import { FieldChanges } from './../../projects/nvm-entity/src/lib/entity-changes/field-changes';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { EntityEventHandlerProvider, IEntity, EntityChagesProvider } from 'projects/nvm-entity/src/public_api';
 import { interval, Observable } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { NvmCache } from 'projects/nvm-cache/src/lib/models/nvm-cache';
 import isNil from 'lodash/isNil';
 import { NvmSettingsService } from 'nvm-settings';
+import { ChartsBlock } from 'projects/nvm-charts/src/lib/charts-block/charts-block';
+import { ChartType } from 'projects/nvm-charts/src/lib/chart/chart-type';
+import { Chart } from 'projects/nvm-charts/src/lib/chart/chart';
+import * as _ from 'lodash';
 
 export class Model extends IEntity<{ id: string, name: string, type: string }> {
 	constructor(public id: string, public name: string, public type: string) {
@@ -16,9 +20,23 @@ export class Model extends IEntity<{ id: string, name: string, type: string }> {
 @Component({
 	selector: 'nvm-root',
 	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.less']
+	styleUrls: ['./app.component.less'],
+	encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit {
+	public charts: ChartsBlock;
+	public charts1: ChartsBlock;
+	public charts2: ChartsBlock;
+	public foldersChart: Chart;
+	public gisto: ChartsBlock;
+
+	public get minHeight() {
+		return 50 * this.gisto.charts[0].charts[0].data.length;
+	}
+
+	public get custom() {
+		return [this.charts.charts[0], this.charts.charts[1]];
+	}
 	title = 'nvm';
 	private _model: Model;
 	private _data = [{ '1': ['1.1', '1.2', '1.3'] }, { '2': ['2.1', '2.2', '2.3'] }, { '3': ['3.1', '3.2', '3.3'] }];
@@ -77,6 +95,259 @@ export class AppComponent implements OnInit {
 				this._model.type = 'c' + val;
 				this._model.refresh(this._model);
 			});
+		const donut = new Chart({
+			id: Math.random().toString(),
+			type: ChartType.DoughnutPercents,
+			legend: ['Четыре', 'Пять'],
+			label: 'column 3',
+			charts: [{ label: 'Парам', data: [55, 45], backgroundColor: ['rgba(255, 0, 0, 0.7)', 'rgba(0,0,0,0.3)'] }],
+			options: {
+				legend: {
+					display: false
+				},
+				scales: {
+					xAxes: [{
+						gridLines: {
+							display: false
+						},
+						ticks: {
+							display: false,
+							beginAtZero: true
+						}
+					}],
+					yAxes: [{
+						gridLines: {
+							display: false
+						},
+						ticks: {
+							display: false,
+							beginAtZero: true
+						}
+					}]
+				},
+				cutoutPercentage: 90
+			}
+		});
+		this.foldersChart = new Chart({
+			id: Math.random().toString(),
+			label: 'Папочки 1',
+			type: ChartType.HorizontalBar,
+			legend: ['Один', 'Два', 'Три'],
+			charts: [
+				{
+					data: [1, 2, 3],
+					backgroundColor: ['green', 'red', 'blue']
+				}
+			]
+		});
+		const stuff = [
+			new Chart({
+				id: Math.random().toString(),
+				label: 'column 1',
+				type: ChartType.HorizontalBar,
+				legend: ['Один', 'Два', 'Три'],
+				charts: [
+					{
+						label: 'Парам',
+						data: [1, 2, 3],
+						backgroundColor: '#2ed297',
+						barThickness: 10
+					},
+					{
+						label: 'Пам',
+						data: [2, 5, 1],
+						backgroundColor: '#fc4a58',
+						barThickness: 10
+					}
+				],
+				options: {
+					legend: {
+						display: false
+					},
+					scales: {
+						xAxes: [{
+							stacked: true,
+							gridLines: {
+								display: false
+							},
+							ticks: {
+								display: false,
+								beginAtZero: true
+							}
+						}],
+						yAxes: [{
+							stacked: true,
+							gridLines: {
+								display: false
+							},
+							ticks: {
+								beginAtZero: true
+							}
+						}]
+					}
+				}
+			}),
+			new Chart({
+				id: Math.random().toString(),
+				type: ChartType.Bar,
+				label: 'column 2',
+				legend: ['Четыре', 'Пять', 'Шесть'],
+				charts: [
+					{ label: 'Парам', data: [5, 2, 4], backgroundColor: '#2e97d2' },
+					{ label: 'Пам', data: [2, 5, 1], backgroundColor: '#fc4a58' }
+				],
+				options: {
+					legend: {
+						display: false
+					},
+					scales: {
+						xAxes: [{
+							stacked: true,
+							ticks: {
+								beginAtZero: true
+							}
+						}],
+						yAxes: [{
+							stacked: true,
+							ticks: {
+								beginAtZero: true
+							}
+						}]
+					}
+				}
+			})
+		];
+		const lines = [
+			new Chart({
+				id: Math.random().toString(),
+				label: 'column 1',
+				type: ChartType.Line,
+				legend: ['Один', 'Два', 'Три'],
+				charts: [
+					{
+						label: 'Парам',
+						data: [1, 2, 3],
+						borderColor: '#2ed297',
+						lineTension: 0,
+						fill: false
+					},
+					{
+						label: 'Пам',
+						data: [2, 5, 1],
+						borderColor: '#fc4a58',
+						lineTension: 0,
+						fill: false
+					}
+				],
+				options: {
+					legend: {
+						display: false
+					},
+					scales: {
+						xAxes: [{
+							stacked: false,
+							ticks: {
+								beginAtZero: true
+							}
+						}],
+						yAxes: [{
+							stacked: false,
+							ticks: {
+								beginAtZero: true
+							}
+						}]
+					}
+				}
+			}),
+			new Chart({
+				id: Math.random().toString(),
+				type: ChartType.Line,
+				label: 'column 2',
+				legend: ['Четыре', 'Пять', 'Шесть'],
+				charts: [
+					{
+						label: 'Парам',
+						data: [5, 2, 4],
+						borderColor: '#2e97d2',
+						lineTension: 0,
+						fill: false
+					},
+					{
+						label: 'Пам',
+						data: [2, 5, 1],
+						borderColor: '#fc4a58',
+						lineTension: 0,
+						fill: false
+					}
+				],
+				options: {
+					legend: {
+						display: false
+					},
+					scales: {
+						xAxes: [{
+							ticks: {
+								beginAtZero: true
+							}
+						}],
+						yAxes: [{
+							ticks: {
+								beginAtZero: true
+							}
+						}]
+					}
+				}
+			})
+		];
+		this.gisto = {
+			label: 'Шесть',
+			charts: [new Chart({
+				id: Math.random().toString(),
+				label: 'column 1',
+				type: ChartType.HorizontalBar,
+				legend: ['Один', 'Два', 'Три', 'Четыре', 'Пять', 'Шесть', 'Семь', 'Восемь'],
+				charts: [
+					{
+						label: 'Парам',
+						data: [1, 2, 3, 9, 2, 6, 4, 3],
+						backgroundColor: '#2ed297',
+						barThickness: 30
+					}
+				],
+				options: {
+					legend: {
+						display: false
+					},
+					scales: {
+						xAxes: [{
+							ticks: {
+								display: false,
+								beginAtZero: true
+							}
+						}],
+						yAxes: [{
+							ticks: {
+								beginAtZero: true
+							}
+						}]
+					}
+				}
+			})]
+		}
+		const clone = _.cloneDeep(donut);
+		clone.type = ChartType.Doughnut;
+		this.charts1 = {
+			label: 'Один',
+			charts: [clone, clone]
+		};
+		this.charts2 = {
+			label: 'Пять',
+			charts: [donut, donut, ...lines]
+		};
+		this.charts = {
+			label: 'Два',
+			charts: [...stuff, donut]
+		};
 	}
 
 	public ngOnInit(): void {

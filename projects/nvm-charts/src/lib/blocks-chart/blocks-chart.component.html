@@ -1,0 +1,11 @@
+<section class="blocks-chart">
+	<label class="blocks-chart__header">{{chart.label}}</label>
+	<ul class=blocks-chart__wrapper>
+		<li class="blocks-chart__item" *ngFor="let value of chart.charts[0].data; let i = index">
+			<div class="element">
+				<div class="element__header" [style.backgroundColor]="chart.charts[0].backgroundColor[i]">{{value}}</div>
+				<div class="element__body">{{chart.legend[i]}}</div>
+			</div>
+		</li>
+	</ul>
+</section>

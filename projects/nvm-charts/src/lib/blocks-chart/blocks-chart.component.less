@@ -1,0 +1,53 @@
+blocks-chart {
+	display: flex;
+	width: 100%;
+	.blocks-chart {
+		padding: 20px;
+		overflow: hidden;
+		border-radius: 8px;
+		background: white;
+		width: 100%;
+		height: 100%;
+		box-sizing: border-box;
+		display: flex;
+		flex-flow: column nowrap;
+		align-items: stretch;
+		&__header {}
+		&__wrapper {
+			display: flex;
+			flex-flow: row nowrap;
+			align-items: stretch;
+			justify-content: space-between;
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			flex-grow: 1;
+		}
+		&__item {
+			width: calc(33% - 5px);
+			.element {
+				width: 100%;
+				height: 100%;
+				display: flex;
+				flex-flow: column nowrap;
+				align-items: stretch;
+				overflow: hidden;
+				border-radius: 8px;
+				border: 1px solid rgba(0, 0, 0, 0.3);
+				&__header {
+					flex-grow: 1;
+					border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+				&__body {
+					display: flex;
+					flex-grow: 1;
+					align-items: center;
+					justify-content: center;
+				}
+			}
+		}
+	}
+}

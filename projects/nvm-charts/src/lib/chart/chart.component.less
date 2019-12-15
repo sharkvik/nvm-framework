@@ -10,12 +10,15 @@ chart {
 
 	.chart {
 		flex-grow: 1;
+		&.donut {
+			margin-left: -12px;
+		}
 	}
 	.doughnut {
 		&__additional {
 			display: flex;
 			position: absolute;
-			top: 0;
+			top: 5px;
 			left: 5px;
 			width: 100%;
 			height: 100%;
@@ -24,10 +27,11 @@ chart {
 			justify-content: center;
 		}
 		&__amount {
-			font-size: 50px;
+			font-size: 35px;
 			font-weight: bold;
 		}
 		&__info {
+			font-size: 13px;
 			color: rgba(0,0,0,0.3);
 		}
 	}

@@ -68,6 +68,8 @@ export class ChartComponent implements OnInit {
 						? 'yellow'
 						: 'green';
 				this.charts[0].backgroundColor[1] = 'rgba(0,0,0,0.1)'
+				this.options.circumference = Math.PI * 6 / 4;
+				this.options.rotation = -Math.PI - Math.PI / 4;
 			}
 			this.chart = new Chart(context, {
 				type: this._typesMap[this.type],

@@ -1,7 +1,7 @@
 <section class="dashboard">
-	<label>{{block.label}}</label>
+	<label>{{charts.label}}</label>
 	<div class="dashboard__charts">
-		<ng-container *ngFor="let chart of block.charts">
+		<ng-container *ngFor="let chart of charts.charts">
 			<chart
 				[style.maxWidth]="chartWidth"
 				[style.maxHeight]="chartHeight"
@@ -16,4 +16,3 @@
 		</ng-container>
 	</div>
 </section>
-<custom-chart [charts]="custom" [label]="123456"></custom-chart>

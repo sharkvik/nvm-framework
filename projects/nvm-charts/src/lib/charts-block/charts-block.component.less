@@ -1,13 +1,21 @@
-.dashboard {
-	&__charts{
+charts-block {
+	display: flex;
+	.dashboard {
+		padding: 20px;
+		overflow: hidden;
+		border-radius: 8px;
+		background: white;
+		box-sizing: border-box;
 		display: flex;
-		flex-flow: row wrap;
-		justify-content: space-around;
-		height: calc(100vh - 34px);
-		height: 500px;
-		width: 500px;
+		flex-flow: column nowrap;
+		flex-grow: 1;
+
+		&__charts {
+			display: flex;
+			flex-flow: row wrap;
+			justify-content: space-around;
+			align-items: stretch;
+			flex-grow: 1;
+		}
 	}
-}
-body {
-	background-color: antiquewhite;
 }

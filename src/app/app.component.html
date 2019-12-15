@@ -1,3 +1,22 @@
-
-
-<charts-block></charts-block>
+<div class="first-row">
+	<charts-block class="one" [charts]="charts1" [grid]="[2, 1]"></charts-block>
+	<div class="first-row__block">
+		<custom-chart class="tree" [charts]="custom" [label]="123456"></custom-chart>
+		<custom-chart class="tree" [charts]="custom" [label]="123456"></custom-chart>
+	</div>
+</div>
+<div class="second-row">
+	<div class="second-row__block first-block">
+		<blocks-chart [chart]="foldersChart"></blocks-chart>
+		<blocks-chart [chart]="foldersChart"></blocks-chart>
+		<blocks-chart [chart]="foldersChart"></blocks-chart>
+	</div>
+	<div class="second-row__block second-block">
+		<charts-block class="for" [charts]="charts2" [grid]="[2, 2]"></charts-block>
+	</div>
+</div>
+<div class="third-row">
+	<div class="second-row__block first-block">
+		<charts-block class="two" [charts]="gisto" [grid]="[1, 1]" [style.minHeight]="minHeight + 'px'"></charts-block>
+	</div>
+</div>
