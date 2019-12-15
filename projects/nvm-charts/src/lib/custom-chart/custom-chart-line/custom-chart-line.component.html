@@ -1,0 +1,6 @@
+<ul class="custom-chart-line">
+	<ng-container *ngFor="let block of dataWidth; let i = index">
+		<li class="custom-chart-line__block" [style.width]="dataWidth[i] + 'px'" [title]="chart.charts[i].label + ': ' + data[i]" [style.backgroundColor]="colors[i]"></li>
+	</ng-container>
+</ul>
+<span *ngFor="let result of data; let i = index" class="custom-chart-line__label" [style.color]="colors[i]" [innerText]="result"></span>

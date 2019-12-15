@@ -1,3 +1,7 @@
 <div class="chart">
-	<canvas id="canvas" #canvas></canvas>
+	<canvas #canvas [height]="height" [width]="width"></canvas>
+	<div class="doughnut__additional" *ngIf="type==5">
+		<div class="doughnut__amount" [innerText]="percents + '%'"></div>
+		<div class="doughnut__info" [innerText]="info"></div>
+	</div>
 </div>

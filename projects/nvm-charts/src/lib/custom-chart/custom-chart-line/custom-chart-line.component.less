@@ -1,0 +1,39 @@
+custom-chart-line
+{
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	.custom-chart-line {
+		list-style: none;
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: flex-start;
+		margin: 0;
+		padding: 12px 0px;
+		border-radius: 4px;
+		margin-right: 8px;
+		&__block {
+			height: 12px;
+			overflow: hidden;
+			cursor: pointer;
+			&:first-child {
+				border-radius: 4px 0px 0px 4px;
+			}
+
+			&:last-child {
+				border-radius: 0px 4px 4px 0px;
+			}
+		}
+		&__label {
+			font-size: 12px;
+			&:first-of-type {
+				color: black !important;
+			}
+			&:not(:last-child) {
+				&:after {
+					content: '/';
+				}
+			}
+		}
+	}
+}

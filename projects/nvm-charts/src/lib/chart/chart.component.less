@@ -1,10 +1,34 @@
-chart .chart {
-	width: 100vw;
-	height: 100vh;
-	display: block;
+chart {
+	display: flex;
+	padding: 10px;
 	box-sizing: border-box;
-	canvas {
-		width: 100%;
-		height: 100%;
+	flex-grow: 1;
+	flex-flow: row;
+	justify-content: space-between;
+	overflow: hidden;
+	position: relative;
+
+	.chart {
+		flex-grow: 1;
+	}
+	.doughnut {
+		&__additional {
+			display: flex;
+			position: absolute;
+			top: 0;
+			left: 5px;
+			width: 100%;
+			height: 100%;
+			flex-flow: column nowrap;
+			align-items: center;
+			justify-content: center;
+		}
+		&__amount {
+			font-size: 50px;
+			font-weight: bold;
+		}
+		&__info {
+			color: rgba(0,0,0,0.3);
+		}
 	}
 }

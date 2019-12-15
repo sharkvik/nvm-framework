@@ -1,94 +1,86 @@
-import {
-	Component,
-	OnInit,
-	ViewChild,
-	ElementRef,
-	AfterViewInit,
-	ViewEncapsulation
-} from "@angular/core";
-import { Chart } from "chart.js";
+import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
+import { Chart } from 'chart.js';
+import { ChartType } from './chart-type';
 
 @Component({
-	selector: "chart",
-	templateUrl: "./chart.component.html",
-	styleUrls: ["./chart.component.less"],
+	selector: 'chart',
+	templateUrl: './chart.component.html',
+	styleUrls: ['./chart.component.less'],
 	encapsulation: ViewEncapsulation.None
 })
-export class ChartComponent implements OnInit, AfterViewInit {
-	@ViewChild("canvas") public canvas: ElementRef<HTMLCanvasElement>;
-	data = {
-		labels: [
-			"January",
-			"February",
-			"March",
-			"April",
-			"May",
-			"June",
-			"July"
-		],
-		datasets: [
-			{
-				label: "Dataset 1",
-				backgroundColor: "rgb(200, 0, 0)",
-				borderColor: "rgb(200, 0, 0)",
-				borderWidth: 1,
-				data: [1, 2, 3, 4, 5, 6, 7]
-			},
-			{
-				label: "Dataset 2",
-				backgroundColor: "rgb(0, 200, 0)",
-				borderColor: "rgb(0, 200, 0)",
-				borderWidth: 1,
-				data: [1, 2, 3, 4, 5, 6, 7]
-			}
-		]
-	};
+export class ChartComponent implements OnInit {
+	@ViewChild('canvas') public context: ElementRef<HTMLCanvasElement>;
+	@Input() public type: ChartType;
+	@Input() public legend: string[];
+	@Input() public charts: any[];
+	@Input() public options: any;
+	@Input() public height: string;
+	@Input() public width: string;
+	@Input() public id: string;
+	@Output() public chartClicked: EventEmitter<{ id: string, chart: Chart, ev: any }> = new EventEmitter<{ id: string, chart: Chart, ev: any }>();
+
+	public get activeColor(): string {
+		if (!this.charts || !this.charts[0] || !this.charts[0].backgroundColor || !this.charts[0].backgroundColor[0]) {
+			return '';
+		}
+		return this.charts[0].backgroundColor[0];
+	}
+
+	public get percents(): number {
+		if (!this.charts || !this.charts[0] || !this.charts[0].data) {
+			return 0;
+		}
+		if (!this.charts[0].data[1]) {
+			return 100;
+		}
+		return Math.round((this.charts[0].data[1] + this.charts[0].data[0]) * this.charts[0].data[0] / 100);
+	}
+
+	public get info(): string {
+		if (!this.charts || !this.charts[0] || !this.charts[0].data) {
+			return `${0} из ${0}`;
+		}
+		if (!this.charts[0].data[1]) {
+			return `${this.charts[0].data[0]} из ${this.charts[0].data[0]}`;
+		}
+		return `${this.charts[0].data[0]} из ${this.charts[0].data[1] + this.charts[0].data[0]}`;
+	}
+
 	public chart: any;
+	private _typesMap: { [id: number]: string } = {
+		1: 'line',
+		2: 'bar',
+		3: 'doughnut',
+		4: 'horizontalBar',
+		5: 'doughnut'
+	};
 
-	constructor() {}
+	constructor() { }
 
-	ngOnInit() {
+	public ngOnInit() {
 		setTimeout(() => {
-			this.chart = new Chart(document.getElementById("canvas"), {
-				type: "bar",
+			const context = this.context.nativeElement.getContext('2d');
+			this.options.onClick = this._chartClicked;
+			if (this.type === ChartType.DoughnutPercents) {
+				this.charts[0].backgroundColor[0] = this.percents <= 33
+					? 'red'
+					: this.percents > 33 && this.percents <= 66
+						? 'yellow'
+						: 'green';
+				this.charts[0].backgroundColor[1] = 'rgba(0,0,0,0.1)'
+			}
+			this.chart = new Chart(context, {
+				type: this._typesMap[this.type],
 				data: {
-					labels: [
-						"Browser",
-						"Game",
-						"Word Processing",
-						"Database",
-						"Spreadsheet",
-						"Multimedia"
-					],
-					datasets: [
-						{
-							label: "number of applications related to",
-							data: [24, 10, 30, 20, 46, 78],
-							backgroundColor: "rgba(54, 162, 235, 0.2",
-							borderColor: "rgba(54, 162, 235, 1)",
-							pointHoverBackgroundColor: "red",
-							borderWidth: 1
-						}
-					]
+					labels: this.legend,
+					datasets: this.charts
 				},
-				options: {
-					title: {
-						text: "Application Logs",
-						display: true
-					},
-					scales: {
-						yAxes: [
-							{
-								ticks: {
-									beginAtZero: true
-								}
-							}
-						]
-					}
-				}
+				options: this.options
 			});
 		}, 1000);
 	}
 
-	public ngAfterViewInit(): void {}
+	private _chartClicked = (ev: any) => {
+		this.chartClicked.emit({id: this.id, chart: this.chart, ev: ev});
+	}
 }

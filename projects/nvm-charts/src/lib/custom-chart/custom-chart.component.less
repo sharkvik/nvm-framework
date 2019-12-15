@@ -1,0 +1,55 @@
+custom-chart {
+	display: flex;
+	.custom-chart {
+		padding: 20px;
+		overflow: hidden;
+		border-radius: 8px;
+		background: white;
+		&__data {
+
+		}
+		&__header {
+			padding-right: 20px;
+			text-align: left;
+			font-weight: normal;
+			padding: 16px 0px;
+			&.column {
+				color: rgba(0, 0, 0, 0.3);
+			}
+		}
+		&__row {
+			.cell {
+				border-top: 1px solid rgba(0,0,0,0.3);
+				padding-right: 20px;
+			}
+		}
+		.legend {
+			list-style: none;
+			padding: 0px;
+			margin: 0px;
+			display: flex;
+			flex-flow: row nowrap;
+			justify-content: center;
+			padding: 12px;
+			&__marker {
+				width: 12px;
+				height: 12px;
+				border-radius: 6px;
+				overflow: hidden;
+				display: block;
+				margin-right: 12px;
+			}
+			&__row {
+				display: flex;
+				flex-flow: row nowrap;
+				align-items: center;
+				font-size: 12px;
+				color: rgba(0, 0, 0, 0.5);
+
+				&:not(:last-child) {
+					margin-right: 12px;
+				}
+			}
+		}
+	}
+}

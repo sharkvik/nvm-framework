@@ -1,0 +1,19 @@
+<section class="dashboard">
+	<label>{{block.label}}</label>
+	<div class="dashboard__charts">
+		<ng-container *ngFor="let chart of block.charts">
+			<chart
+				[style.maxWidth]="chartWidth"
+				[style.maxHeight]="chartHeight"
+				[style.minWidth]="chartWidth"
+				[style.minHeight]="chartHeight"
+				[legend]="chart.legend"
+				[id]="chart.id"
+				[type]="chart.type"
+				[charts]="chart.charts"
+				[options]="chart.options"
+				(chartClicked)="onChartClicked($event)"></chart>
+		</ng-container>
+	</div>
+</section>
+<custom-chart [charts]="custom" [label]="123456"></custom-chart>

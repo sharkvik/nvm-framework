@@ -1,0 +1,32 @@
+<div class="custom-chart">
+	<table class="custom-chart__data" cellspacing="0" cellpadding="0">
+		<thead>
+			<tr>
+				<th class="custom-chart__header">{{label}}</th>
+				<th *ngFor="let chart of charts" class="custom-chart__header column">
+					{{chart.label}}
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let label of charts[0].legend; let x = index" class="custom-chart__row">
+				<td class="cell">{{label}}</td>
+				<td class="cell" *ngFor="let chart of charts">
+					<custom-chart-line [chart]="chart" [xAxe]="x"></custom-chart-line>
+				</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr class="custom-chart__footer custom-chart__row">
+				<td [attr.colspan]="charts.length + 1" class="custom-chart__legend cell">
+					<ul class="legend">
+						<li *ngFor="let item of legend" class="legend__row">
+							<span [style.backgroundColor]="item.color" class="legend__marker"></span>
+							<label>{{item.label}}</label>
+						</li>
+					</ul>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+</div>

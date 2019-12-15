@@ -7,9 +7,9 @@ import { NvmCache } from 'projects/nvm-cache/src/lib/models/nvm-cache';
 import isNil from 'lodash/isNil';
 import { NvmSettingsService } from 'nvm-settings';
 
-export class Model extends IEntity<{id: string, name: string, type: string}> {
+export class Model extends IEntity<{ id: string, name: string, type: string }> {
 	constructor(public id: string, public name: string, public type: string) {
-		super({id, name, type});
+		super({ id, name, type });
 	}
 }
 
@@ -120,23 +120,23 @@ export class AppComponent implements OnInit {
 		this._ecp.register(this._model);
 		const nameSubj = this._eehp.createHandler(this._model).fieldHandler('name');
 		nameSubj.subscribe((c: FieldChanges) => {
-				console.log(`field: 'name'; entityId: ${this._model.id}; prev: ${c.previousValue}; cur: ${c.currentValue}`);
-			});
+			console.log(`field: 'name'; entityId: ${this._model.id}; prev: ${c.previousValue}; cur: ${c.currentValue}`);
+		});
 		nameSubj.subscribe((c: FieldChanges) => {
-				console.log(`*field: 'name'; entityId: ${this._model.id}; prev: ${c.previousValue}; cur: ${c.currentValue}`);
-			});
+			console.log(`*field: 'name'; entityId: ${this._model.id}; prev: ${c.previousValue}; cur: ${c.currentValue}`);
+		});
 
 		const typeSubj = this._eehp.createHandler(this._model).fieldHandler('type');
 		typeSubj.subscribe((c: FieldChanges) => {
-				if(c.currentValue === 'c3') {
-					this._ecp.clear();
-				}
-				console.log(`field: 'type'; entityId: ${this._model.id}; prev: ${c.previousValue}; cur: ${c.currentValue}`);
-			});
+			if (c.currentValue === 'c3') {
+				this._ecp.clear();
+			}
+			console.log(`field: 'type'; entityId: ${this._model.id}; prev: ${c.previousValue}; cur: ${c.currentValue}`);
+		});
 
 		const entitySubj = this._eehp.createHandler(this._model).entityHandler()
 		entitySubj.subscribe((c) => {
-				console.log(JSON.stringify(c.changes));
-			});
+			console.log(JSON.stringify(c.changes));
+		});
 	}
 }
