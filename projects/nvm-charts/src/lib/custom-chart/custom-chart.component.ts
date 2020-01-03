@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 @Component({
 	selector: 'custom-chart',
 	templateUrl: './custom-chart.component.html',
-	styleUrls: ['./custom-chart.component.less'],
+	styleUrls: ['./custom-chart.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
 export class CustomChartComponent implements OnInit {

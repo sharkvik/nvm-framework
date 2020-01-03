@@ -1,5 +1,5 @@
-import { Observable, ReplaySubject, Subscriber, Subject, of } from 'rxjs';
-import isNil from 'lodash/isNil';
+import { isNil } from 'lodash';
+import { ReplaySubject, Observable, Subject, of, Subscriber } from 'rxjs';
 
 export class NvmSubject<T> extends ReplaySubject<T> {
 	private _action: () => Observable<T>;

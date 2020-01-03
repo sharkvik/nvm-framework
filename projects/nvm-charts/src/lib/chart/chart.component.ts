@@ -5,11 +5,11 @@ import { ChartType } from './chart-type';
 @Component({
 	selector: 'chart',
 	templateUrl: './chart.component.html',
-	styleUrls: ['./chart.component.less'],
+	styleUrls: ['./chart.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
 export class ChartComponent implements OnInit {
-	@ViewChild('canvas') public context: ElementRef<HTMLCanvasElement>;
+	@ViewChild('canvas', {static: true}) public context: ElementRef<HTMLCanvasElement>;
 	@Input() public type: ChartType;
 	@Input() public legend: string[];
 	@Input() public charts: any[];

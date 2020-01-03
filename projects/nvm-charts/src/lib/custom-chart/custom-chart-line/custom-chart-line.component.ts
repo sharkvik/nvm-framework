@@ -4,7 +4,7 @@ import { Chart } from './../../chart/chart';
 @Component({
 	selector: 'custom-chart-line',
 	templateUrl: './custom-chart-line.component.html',
-	styleUrls: ['./custom-chart-line.component.less'],
+	styleUrls: ['./custom-chart-line.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
 export class CustomChartLineComponent implements OnInit {

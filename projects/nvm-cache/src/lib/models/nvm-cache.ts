@@ -1,6 +1,6 @@
 import { NvmSubject } from './nvm-subject';
 import { Observable, Subscriber } from 'rxjs';
-import isNil from 'lodash/isNil';
+import { isNil } from 'lodash';
 
 export class NvmCache<T> {
 	private _cache: Map<string, NvmSubject<T>> = new Map<string, NvmSubject<T>>();

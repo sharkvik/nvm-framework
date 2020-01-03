@@ -6,7 +6,7 @@ import { ChartsBlock } from './charts-block';
 @Component({
 	selector: 'charts-block',
 	templateUrl: './charts-block.component.html',
-	styleUrls: ['./charts-block.component.less'],
+	styleUrls: ['./charts-block.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
 export class ChartsBlockComponent implements OnInit {

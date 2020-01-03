@@ -1,11 +1,13 @@
 body {
 	background-color: antiquewhite;
+
 	.first-row {
 		height: 350px;
 		display: flex;
 		flex-flow: row nowrap;
 		align-items: stretch;
 		margin-bottom: 10px;
+
 		&__block {
 			overflow: hidden;
 			border-radius: 8px;
@@ -15,20 +17,24 @@ body {
 			align-items: stretch;
 			flex-grow: 1;
 		}
+
 		.one {
 			width: 200px;
 			margin-right: 10px;
 		}
+
 		.tree {
 			flex-grow: 1;
 		}
 	}
+
 	.second-row {
 		height: 350px;
 		display: flex;
 		flex-flow: row nowrap;
 		align-items: stretch;
 		margin-bottom: 10px;
+
 		&__block {
 			overflow: hidden;
 			border-radius: 8px;
@@ -37,20 +43,25 @@ body {
 			flex-flow: column nowrap;
 			align-items: stretch;
 			flex-grow: 1;
+
 			&.first-block {
 				min-width: 680px;
+
 				blocks-chart {
 					flex-grow: 1;
 				}
 			}
+
 			&.second-block {
 				margin-left: 10px;
+
 				.for {
 					height: 100%;
 				}
 			}
 		}
 	}
+
 	.two {
 		min-width: 500px;
 	}
