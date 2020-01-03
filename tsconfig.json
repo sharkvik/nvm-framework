@@ -1,65 +1,77 @@
 {
-	"compileOnSave": false,
-	"compilerOptions": {
-		"baseUrl": "./",
-		"outDir": "./dist/out-tsc",
-		"sourceMap": true,
-		"declaration": false,
-		"module": "esnext",
-		"moduleResolution": "node",
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
-		"target": "es2015",
-		"typeRoots": [
-			"node_modules/@types"
-		],
-		"lib": [
-			"es2018",
-			"dom"
-		],
-		"paths": {
-			"nvm-cache": [
-				"dist/nvm-cache"
-			],
-			"nvm-cache/*": [
-				"dist/nvm-cache/*"
-			],
-			"nvm-loader": [
-				"dist/nvm-loader"
-			],
-			"nvm-loader/*": [
-				"dist/nvm-loader/*"
-			],
-			"nvm-storage": [
-				"dist/nvm-storage"
-			],
-			"nvm-storage/*": [
-				"dist/nvm-storage/*"
-			],
-			"nvm-quagga": [
-				"dist/nvm-quagga"
-			],
-			"nvm-quagga/*": [
-				"dist/nvm-quagga/*"
-			],
-			"nvm-entity": [
-				"dist/nvm-entity"
-			],
-			"nvm-entity/*": [
-				"dist/nvm-entity/*"
-			],
-			"nvm-settings": [
-				"dist/nvm-settings"
-			],
-			"nvm-settings/*": [
-				"dist/nvm-settings/*"
-			],
-			"nvm-charts": [
-				"dist/nvm-charts"
-			],
-			"nvm-charts/*": [
-				"dist/nvm-charts/*"
-			]
-		}
-	}
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es2015",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "nvm-cache": [
+        "dist/nvm-cache"
+      ],
+      "nvm-cache/*": [
+        "dist/nvm-cache/*"
+      ],
+      "nvm-loader": [
+        "dist/nvm-loader"
+      ],
+      "nvm-loader/*": [
+        "dist/nvm-loader/*"
+      ],
+      "nvm-storage": [
+        "dist/nvm-storage"
+      ],
+      "nvm-storage/*": [
+        "dist/nvm-storage/*"
+      ],
+      "nvm-quagga": [
+        "dist/nvm-quagga"
+      ],
+      "nvm-quagga/*": [
+        "dist/nvm-quagga/*"
+      ],
+      "nvm-entity": [
+        "dist/nvm-entity"
+      ],
+      "nvm-entity/*": [
+        "dist/nvm-entity/*"
+      ],
+      "nvm-settings": [
+        "dist/nvm-settings"
+      ],
+      "nvm-settings/*": [
+        "dist/nvm-settings/*"
+      ],
+      "nvm-charts": [
+        "dist/nvm-charts"
+      ],
+      "nvm-charts/*": [
+        "dist/nvm-charts/*"
+      ],
+      "overlay": [
+        "dist/overlay"
+      ],
+      "overlay/*": [
+        "dist/overlay/*"
+      ],
+      "nvm-overlay": [
+        "dist/nvm-overlay"
+      ],
+      "nvm-overlay/*": [
+        "dist/nvm-overlay/*"
+      ]
+    }
+  }
 }

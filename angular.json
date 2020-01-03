@@ -433,6 +433,76 @@
 					}
 				}
 			}
+		},
+		"overlay": {
+			"projectType": "library",
+			"root": "projects/overlay",
+			"sourceRoot": "projects/overlay/src",
+			"prefix": "lib",
+			"architect": {
+				"build": {
+					"builder": "@angular-devkit/build-ng-packagr:build",
+					"options": {
+						"tsConfig": "projects/overlay/tsconfig.lib.json",
+						"project": "projects/overlay/ng-package.json"
+					}
+				},
+				"test": {
+					"builder": "@angular-devkit/build-angular:karma",
+					"options": {
+						"main": "projects/overlay/src/test.ts",
+						"tsConfig": "projects/overlay/tsconfig.spec.json",
+						"karmaConfig": "projects/overlay/karma.conf.js"
+					}
+				},
+				"lint": {
+					"builder": "@angular-devkit/build-angular:tslint",
+					"options": {
+						"tsConfig": [
+							"projects/overlay/tsconfig.lib.json",
+							"projects/overlay/tsconfig.spec.json"
+						],
+						"exclude": [
+							"**/node_modules/**"
+						]
+					}
+				}
+			}
+		},
+		"nvm-overlay": {
+			"projectType": "library",
+			"root": "projects/nvm-overlay",
+			"sourceRoot": "projects/nvm-overlay/src",
+			"prefix": "lib",
+			"architect": {
+				"build": {
+					"builder": "@angular-devkit/build-ng-packagr:build",
+					"options": {
+						"tsConfig": "projects/nvm-overlay/tsconfig.lib.json",
+						"project": "projects/nvm-overlay/ng-package.json"
+					}
+				},
+				"test": {
+					"builder": "@angular-devkit/build-angular:karma",
+					"options": {
+						"main": "projects/nvm-overlay/src/test.ts",
+						"tsConfig": "projects/nvm-overlay/tsconfig.spec.json",
+						"karmaConfig": "projects/nvm-overlay/karma.conf.js"
+					}
+				},
+				"lint": {
+					"builder": "@angular-devkit/build-angular:tslint",
+					"options": {
+						"tsConfig": [
+							"projects/nvm-overlay/tsconfig.lib.json",
+							"projects/nvm-overlay/tsconfig.spec.json"
+						],
+						"exclude": [
+							"**/node_modules/**"
+						]
+					}
+				}
+			}
 		}
 	},
 	"defaultProject": "nvm-framework"

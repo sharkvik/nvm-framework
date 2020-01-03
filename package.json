@@ -35,6 +35,7 @@
 		"lodash": "4.17.15",
 		"quagga": "0.12.1",
 		"rxjs": "^6.0.0",
+		"tslib": "^1.10.0",
 		"zone.js": "~0.9.1"
 	},
 	"devDependencies": {
