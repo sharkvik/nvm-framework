@@ -1,10 +1,10 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { NvmSettingsModule, NvmSettingsService } from 'nvm-settings';
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export const settingsProvider = (config: NvmSettingsService) => () => {
 	return config.load('/assets/settings.json');
@@ -18,7 +18,7 @@ export const useAppConfigProvider = { provide: APP_INITIALIZER, useFactory: sett
 	],
 	imports: [
 		RouterModule,
-		BrowserModule,
+		BrowserAnimationsModule,
 		AppRoutingModule,
 		NvmSettingsModule.forRoot()
 	],

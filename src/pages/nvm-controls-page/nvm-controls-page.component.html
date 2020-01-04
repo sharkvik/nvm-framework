@@ -1,3 +1,6 @@
-<p>
-  nvm-controls-page works!
-</p>
+<div #container1 [style.height]="'500px'" [style.width]="'500px'" [style.border]="'1px solid black'">
+	<input type="text" #anchor1 (focus)="showOverlay(overlay1)" (blur)="hideOverlay(overlay1)" />
+	<nvm-overlay #overlay1 [container]="container1" [anchor]="anchor1" [appendTo]="'body'" [adjustWidth]="true">
+		бла бла бла
+	</nvm-overlay>
+</div>
