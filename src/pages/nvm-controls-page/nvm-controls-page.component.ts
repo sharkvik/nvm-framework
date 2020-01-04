@@ -12,7 +12,7 @@ export class NvmControlsPageComponent implements OnInit {
 
 	constructor() { }
 
-	ngOnInit() {
+	public ngOnInit() {
 	}
 
 	public showOverlay = (overly: NvmOverlayComponent): void => {

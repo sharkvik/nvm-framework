@@ -1,6 +1,38 @@
-<div #container1 [style.height]="'500px'" [style.width]="'500px'" [style.border]="'1px solid black'">
-	<input type="text" #anchor1 (focus)="showOverlay(overlay1)" (blur)="hideOverlay(overlay1)" />
+<div #container1 [style.height]="'250px'" [style.width]="'500px'" [style.border]="'1px solid black'">
+	<input type="text" #anchor1 (focus)="showOverlay(overlay1)" />
 	<nvm-overlay #overlay1 [container]="container1" [anchor]="anchor1" [appendTo]="'body'" [adjustWidth]="true">
+		бла бла бла
+	</nvm-overlay>
+</div>
+<div class="scroller">
+	<div #container2 [style.height]="'500px'" [style.width]="'500px'" [style.border]="'1px solid black'">
+		<input type="text" #anchor2 (focus)="showOverlay(overlay2)" />
+		<nvm-overlay #overlay2 [container]="container2" [anchor]="anchor2" [appendTo]="'body'" [adjustWidth]="true">
+			бла бла бла
+		</nvm-overlay>
+	</div>
+</div>
+<div #container3 [style.height]="'250px'" [style.width]="'500px'" [style.border]="'1px solid black'" [style.position]="'relative'">
+	<input [style.position]="'absolute'" [style.bottom]="'0px'" type="text" #anchor3 (focus)="showOverlay(overlay3)" />
+	<nvm-overlay #overlay3 [container]="container3" [anchor]="anchor3" [appendTo]="'body'" [adjustWidth]="true">
+		бла бла бла
+	</nvm-overlay>
+</div>
+<div #container4 [style.height]="'55px'" [style.width]="'500px'" [style.border]="'1px solid black'">
+	<input type="text" #anchor4 (focus)="showOverlay(overlay4)" />
+	<nvm-overlay #overlay4 [container]="container4" [anchor]="anchor4" [appendTo]="'body'" [adjustWidth]="true">
+		бла бла бла
+	</nvm-overlay>
+</div>
+<div #container5 [style.height]="'55px'" [style.width]="'500px'" [style.border]="'1px solid black'" [style.position]="'relative'">
+	<input [style.position]="'absolute'" [style.bottom]="'0px'" type="text" #anchor5 (focus)="showOverlay(overlay5)" />
+	<nvm-overlay #overlay5 [container]="container5" [anchor]="anchor5" [appendTo]="'body'" [adjustWidth]="true">
+		бла бла бла
+	</nvm-overlay>
+</div>
+<div #container6 [style.height]="'90px'" [style.width]="'500px'" [style.border]="'1px solid black'" [style.position]="'relative'">
+	<input [style.position]="'absolute'" [style.bottom]="'35px'" type="text" #anchor6 (focus)="showOverlay(overlay6)" />
+	<nvm-overlay #overlay6 [container]="container6" [anchor]="anchor6" [appendTo]="'body'" [adjustWidth]="true">
 		бла бла бла
 	</nvm-overlay>
 </div>

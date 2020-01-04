@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IEntity } from './entity/entity';
 import { Subscription, Subject } from 'rxjs';
 import { EntityChanges } from './entity-changes/entity-changes';
-import isNil from 'lodash/isNil';
+import { isNil } from 'lodash';
 
 @Injectable({
 	providedIn: 'root'
