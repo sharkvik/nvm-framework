@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable, Subscriber } from 'rxjs';
 import { IdItem } from './IdItem';
-import isNil from 'lodash/isNil';
+import { isNil } from 'lodash';
 
 @Injectable({
 	providedIn: 'root'

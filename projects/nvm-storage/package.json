@@ -1,6 +1,6 @@
 {
 	"name": "nvm-storage",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"description": "IndexDB wrapper",
 	"homepage": "https://github.com/sharkvik/nvm-framework/blob/master/README.md",
 	"bugs": {
