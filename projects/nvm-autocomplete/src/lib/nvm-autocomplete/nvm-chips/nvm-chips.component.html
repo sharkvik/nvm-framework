@@ -1,0 +1,9 @@
+<ul class="nvm-chips">
+	<li *ngFor="let item of model; trackBy:trackByValue" class="nvm-chips__item" [ngClass]="{
+		'nvm-chips__item--selected': item.selected,
+		'nvm-chips__item--disabled': disabled
+	}" (click)="select(item)">
+		<nvm-autocomplete-item-outlet [template]="templateOutlet.templateRef" [context]="{$implicit: item}"></nvm-autocomplete-item-outlet>
+		<span class="nvm-chips__item-delete" (click)="delete(item, $event)">✖</span>
+	</li>
+</ul>

@@ -1,0 +1,19 @@
+{
+	"name": "nvm-autocomplete",
+	"version": "0.0.1",
+	"description": "autocomplete/dropdown",
+	"homepage": "https://github.com/sharkvik/nvm-framework/blob/master/README.md",
+	"bugs": {
+		"email": "shark_vik@inbox.ru"
+	},
+	"author": {
+		"name": "Viktor",
+		"email": "shark_vik@inbox.ru"
+	},
+	"license": "MIT",
+	"peerDependencies": {
+		"@angular/common": "^6.0.0-rc.0 || ^6.0.0 || ^8.2.14",
+		"@angular/core": "^6.0.0-rc.0 || ^6.0.0 || ^8.2.14",
+		"lodash": "^4.0.0"
+	}
+}

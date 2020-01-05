@@ -1,0 +1,28 @@
+nvm-chips .nvm-chips {
+	display: flex;
+	flex-flow: row wrap;
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+	&__item {
+		display: flex;
+		flex-flow: row nowrap;
+		background-color: rgb(0, 174, 255);
+		border: 1px solid rgb(0, 100, 255);
+		border-radius: 4px;
+		margin: 2px;
+		padding: 2px 4px;
+		align-items: center;
+		cursor: pointer;
+		&--selected {
+			background-color: darken($color: rgb(0, 174, 255), $amount: 10%);
+		}
+		&--disabled {
+			background-color: lighten($color: rgb(0, 174, 255), $amount: 10%);
+		}
+		&-delete {
+			cursor: pointer;
+			margin-left: 4px;
+		}
+	}
+}

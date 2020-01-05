@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, Input, ElementRef, OnDestroy, ChangeDetectorRef, ViewRef, HostBinding, HostListener } from '@angular/core';
-import { isNil, isEmpty } from 'lodash';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, Input, ElementRef, OnDestroy, ChangeDetectorRef, ViewRef, HostBinding, HostListener, Output, EventEmitter } from '@angular/core';
+import { isNil } from 'lodash';
 import { Subscription, Subject, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { trigger, state, style, animate, transition, keyframes } from '@angular/animations';
@@ -25,9 +25,12 @@ import { NvmOverlayService } from '../nvm-overlay.service';
 	]
 })
 export class NvmOverlayComponent implements OnInit, OnDestroy {
+	@Output() public openned: EventEmitter<any> = new EventEmitter<any>();
+	@Output() public closed: EventEmitter<any> = new EventEmitter<any>();
+
 	@Input() public appendTo: ElementRef<HTMLElement> | HTMLElement | string;
 	@Input() public anchor: ElementRef<HTMLElement> | HTMLElement;
-	@Input() public container: ElementRef<HTMLElement> | HTMLElement;
+	@Input() public container: ElementRef<HTMLElement> | HTMLElement | string;
 	@Input() public adjustWidth: boolean = false;
 	@Input() public adjustHeight: boolean = true;
 
@@ -44,6 +47,7 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 	}
 
 	public id: string;
+	public position: string = 'bottom';
 	private _appendTo: HTMLElement;
 	private _anchor: HTMLElement;
 	private _container: HTMLElement;
@@ -73,10 +77,13 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 		this._subscriptions.add(this._show.pipe(switchMap(() => {
 			this._displayImpl();
 			return of(true);
-		})).subscribe(this._adjust));
+		})).subscribe(() => {
+			this._adjust();
+			this.openned.emit();
+		}));
 		this._appendTo = this.appendTo === 'body' ? document.body : (this.appendTo as ElementRef<HTMLElement>).nativeElement || (this.appendTo as HTMLElement);
 		this._anchor = (this.anchor as ElementRef<HTMLElement>).nativeElement || (this.anchor as HTMLElement);
-		this._container = (this.container as ElementRef<HTMLElement>).nativeElement || (this.container as HTMLElement);
+		this._container = this.container === 'body' ? document.body : (this.container as ElementRef<HTMLElement>).nativeElement || (this.container as HTMLElement);
 	}
 
 	public ngOnDestroy(): void {
@@ -100,6 +107,7 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 		this._display = false;
 		this._host.nativeElement.remove();
 		this._detectChanges();
+		this.closed.emit();
 	}
 
 	public adjust = (): void => {
@@ -116,6 +124,7 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 	}
 
 	private _calculatePosition = (): void => {
+		this.position = 'bottom';
 		if (isNil(this._appendTo) || isNil(this._anchor)) {
 			return;
 		}
@@ -140,6 +149,7 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 			return;
 		}
 		if (topDifference > 5) {
+			this.position = 'top';
 			this._bottom = window.innerHeight - anchorRectangle.top - window.scrollY;
 			this._left = anchorRectangle.left;
 			return;
@@ -150,6 +160,7 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 			return;
 		}
 		if (topDifference > bottomDifference) {
+			this.position = 'top';
 			this._bottom = window.innerHeight - anchorRectangle.top - window.scrollY;
 			this._left = anchorRectangle.left;
 			this._maxHeight = anchorRectangle.top - this._containerRect.top;
@@ -178,7 +189,6 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 	}
 
 	private _fillPosition = (): void => {
-
 		if (!isNil(this._top) && this._top !== -9999) {
 			this._host.nativeElement.style.top = `${this._top}px`;
 		} else if (this._top !== -9999) {
@@ -211,6 +221,7 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 		} else {
 			this._host.nativeElement.style.width = 'initial';
 		}
+		this._host.nativeElement.className = this.position;
 	}
 
 	private _append = (): void => {

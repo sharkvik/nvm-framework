@@ -1,0 +1,11 @@
+<nvm-chips [(ngModel)]="chips">
+	<div *nvm-autocomplete-element="let item">
+		{{item.label}}
+	</div>
+</nvm-chips>
+<input type="text" (keydown)="keyPress($event)" />
+<nvm-suggestions [(ngModel)]="chips" [appendTo]="'body'" [anchor]="anchor" [container]="'body'" [adjustWidth]="true">
+	<div *nvm-autocomplete-element="let item">
+		{{item.label}}
+	</div>
+</nvm-suggestions>
