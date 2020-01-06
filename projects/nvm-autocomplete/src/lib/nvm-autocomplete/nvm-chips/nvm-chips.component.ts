@@ -47,6 +47,9 @@ export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 	}
 
 	public select = (item: NvmAutocompleteItem): void => {
+		if (isNil(item)) {
+			return;
+		}
 		this.model.forEach((x: NvmAutocompleteItem) => {
 			if (x.selected && x.value !== item.value) {
 				x.selected = false;

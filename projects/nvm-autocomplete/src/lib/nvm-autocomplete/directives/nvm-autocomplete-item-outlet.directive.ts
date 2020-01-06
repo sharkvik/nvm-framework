@@ -17,6 +17,7 @@ export class NvmAutocompleteItemOutlet implements OnChanges {
 		const [, ctx] = analyzeChanges(changes, () => this.context);
 
 		if (tmpl && ctx) {
+			this._viewContainer.clear();
 			this._viewContainer.createEmbeddedView(tmpl, ctx);
 		}
 	}

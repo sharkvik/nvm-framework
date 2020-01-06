@@ -44,6 +44,6 @@
 		</nvm-overlay>
 	</div>
 	<div>
-		<nvm-autocomplete></nvm-autocomplete>
+		<nvm-autocomplete (complete)="search($event)" [(ngModel)]="acModel" [(suggestions)]="acSuggestions"></nvm-autocomplete>
 	</div>
 </div>

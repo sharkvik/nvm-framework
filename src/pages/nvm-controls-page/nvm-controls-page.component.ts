@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { NvmOverlayComponent } from 'projects/nvm-overlay/src/public-api';
+import { NvmAutocompleteItem } from 'projects/nvm-autocomplete/src/public-api';
 
 @Component({
 	selector: 'nvm-nvm-controls-page',
@@ -9,7 +10,8 @@ import { NvmOverlayComponent } from 'projects/nvm-overlay/src/public-api';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NvmControlsPageComponent implements OnInit {
-
+	public acModel: NvmAutocompleteItem[] = [];
+	public acSuggestions: NvmAutocompleteItem[] = [];
 	constructor() { }
 
 	public ngOnInit() {
@@ -23,4 +25,7 @@ export class NvmControlsPageComponent implements OnInit {
 		overly.hide();
 	}
 
+	public search = (ev: {query: string, originalEvent: KeyboardEvent}): void => {
+		this.acSuggestions = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(x => new NvmAutocompleteItem(x, ev.query + x, x.toString()));
+	}
 }

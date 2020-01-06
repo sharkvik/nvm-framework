@@ -55,10 +55,11 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 	}
 
 	public writeValue(value: NvmAutocompleteItem[]): void {
-		this.model = new Set<NvmAutocompleteItem>(value);
+		this.model = new Set<NvmAutocompleteItem>(value || []);
 		if (!isNil(this.overlay)) {
 			if (this.model.size > 0) {
 				this.overlay.show();
+				this.hoverBottom();
 			} else {
 				this.overlay.hide();
 			}

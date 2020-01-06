@@ -7,7 +7,7 @@
 	(closed)="onClosed()">
 	<div *ngFor="let item of model; trackBy:trackByValue" class="nvm-suggestions__item" [ngClass]="{
 			'nvm-suggestions__item--hover': item.selected
-		}" (click)="select(item)">
+		}" (click)="select(item)" (mouseenter)="hover(item)">
 		<nvm-autocomplete-item-outlet [template]="templateOutlet.templateRef" [context]="{$implicit: item}">
 		</nvm-autocomplete-item-outlet>
 	</div>

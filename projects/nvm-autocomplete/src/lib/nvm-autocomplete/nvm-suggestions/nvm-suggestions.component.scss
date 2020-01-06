@@ -2,8 +2,7 @@
 	&__item {
 		padding: 8px 12px;
 		cursor: pointer;
-		&--hover,
-		&:hover {
+		&--hover {
 			background-color: lighten($color: rgb(0, 174, 255), $amount: 20%);
 		}
 	}
