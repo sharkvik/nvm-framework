@@ -105,7 +105,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	public onItemSelected = (item: NvmAutocompleteItem): void => {
 		const newItem = cloneDeep(item);
 		newItem.selected = false;
-		this.innerModel = [...this.innerModel, newItem];
+		this.innerModel = [...(this.innerModel || []), newItem];
 		this.inputControl.nativeElement.value = '';
 		this.selected.emit(item);
 		this.onModelChange(this.model);
