@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, forwardRef, ChangeDetectorRef, ViewRef, Input, ElementRef, ContentChild, ViewChild, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { NvmAutocompleteItem } from '../models/nvm-autocomplete-item';
-import { debounce, isNil, isEmpty } from 'lodash';
+import { debounce, isNil, throttle } from 'lodash';
 import { NvmAutocompleteElement } from '../directives/nvm-autocomplete-element.directive';
 import { NvmOverlayComponent } from 'projects/nvm-overlay/src/public-api';
 
@@ -66,7 +66,7 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 				this.overlay.hide();
 			}
 		}
-		this._detectChanges();
+		this._detectChangesDebounced();
 	}
 
 	public registerOnChange(fn: (...args: any[]) => void): void {
@@ -83,7 +83,7 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 
 	public setDisabledState?(isDisabled: boolean): void {
 		this.disabled = isDisabled;
-		this._detectChanges();
+		this._detectChangesDebounced();
 	}
 
 	public hoverTop = (): void => {
@@ -124,10 +124,12 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 		this._hoverred = undefined;
 	}
 
-	private _detectChanges = debounce((): void => {
+	private _detectChanges = (): void => {
 		if ((this._cd as ViewRef).destroyed) {
 			return;
 		}
 		this._cd.detectChanges();
-	}, 100)
+	}
+
+	private _detectChangesDebounced = debounce(this._detectChanges, 100);
 }
