@@ -46,6 +46,10 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 		return this._host.nativeElement;
 	}
 
+	public get valueIsEmpty(): boolean {
+		return isEmpty(this.inputControl.nativeElement.value);
+	}
+
 	public get model(): NvmAutocompleteItem[] | NvmAutocompleteItem {
 		if (this.multiple) {
 			return this.innerModel;
@@ -102,6 +106,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 		const newItem = cloneDeep(item);
 		newItem.selected = false;
 		this.innerModel = [...this.innerModel, newItem];
+		this.inputControl.nativeElement.value = '';
 		this.selected.emit(item);
 		this.onModelChange(this.model);
 	}
@@ -109,6 +114,9 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	public onInput = (ev: KeyboardEvent): void => {
 		this._onComplete(ev);
 		this.input.emit(ev);
+		if (this.valueIsEmpty) {
+			setTimeout(() => this.suggestionsControl.overlay.adjust());
+		}
 	}
 
 	public keyPress = (ev: KeyboardEvent): void => {

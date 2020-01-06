@@ -17,4 +17,11 @@ body {
 			border: 1px solid rgba(255, 0, 0, 0.39);
 		}
 	}
+	.autocomplete {
+		width: 200px;
+		padding: 10px;
+		box-sizing: border-box;
+		&__1 {
+		}
+	}
 }

@@ -1,4 +1,46 @@
 nvm-autocomplete {
 	display: flex;
-	flex-flow: row wrap;
+	flex-flow: row nowrap;
+	border: 1px solid rgba($color: #000000, $alpha: 0.15);
+	min-height: 32px;
+	width: 100%;
+	box-sizing: border-box;
+	.nvm-autocomplete {
+		&__chips {
+			overflow: hidden;
+			.nvm-chips {
+				display: flex;
+				flex-flow: row wrap;
+				width: 100%;
+				height: 100%;
+				&__item {
+					overflow: hidden;
+					.nvm-chip {
+						&__content {
+							overflow: hidden;
+							text-overflow: ellipsis;
+						}
+					}
+				}
+				&__external-content {
+					flex-grow: 1;
+					width: 10px;
+					overflow: hidden;
+				}
+			}
+		}
+		&__input {
+			outline: none;
+			border: none;
+			padding: 0px 5px;
+			min-height: 30px;
+			width: 100%;
+			box-sizing: border-box;
+		}
+	}
+}
+.nvm-autocomplete__suggestions.suggestion__content {
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }

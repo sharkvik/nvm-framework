@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, forwardRef, ChangeDetectorRef, ViewRef, Input, ElementRef, ContentChild, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, forwardRef, ChangeDetectorRef, ViewRef, Input, ElementRef, ContentChild, ViewChild, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { NvmAutocompleteItem } from '../models/nvm-autocomplete-item';
-import { debounce, isNil } from 'lodash';
+import { debounce, isNil, isEmpty } from 'lodash';
 import { NvmAutocompleteElement } from '../directives/nvm-autocomplete-element.directive';
 import { NvmOverlayComponent } from 'projects/nvm-overlay/src/public-api';
 
@@ -21,6 +21,7 @@ export const NVM_SUGGESTIONS_ACCESSOR = {
 })
 export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 	@Output() public selected: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
+
 	@Input() public appendTo: ElementRef<HTMLElement> | HTMLElement | string;
 	@Input() public anchor: ElementRef<HTMLElement> | HTMLElement;
 	@Input() public container: ElementRef<HTMLElement> | HTMLElement;
@@ -37,6 +38,7 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 	constructor(private _cd: ChangeDetectorRef) { }
 
 	public ngOnInit() {
+
 	}
 
 	public trackByValue = (index: number, item: NvmAutocompleteItem): string => {
@@ -49,8 +51,8 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 				x.selected = false;
 			}
 		});
-		item.selected = !item.selected;
-		this._hoverred = item.selected ? item : undefined;
+		item.selected = true;
+		this._hoverred = item;
 		this._detectChanges();
 	}
 

@@ -1,9 +1,13 @@
-<nvm-chips [(ngModel)]="innerModel" (deleted)="onItemDeleted($event)">
-	<div *nvm-autocomplete-element="let item">
+<nvm-chips class="nvm-autocomplete__chips" [(ngModel)]="innerModel" (deleted)="onItemDeleted($event)">
+	<div class="nvm-chip__content" *nvm-autocomplete-element="let item">
 		{{item.label}}
 	</div>
+	<input #acInput class="nvm-autocomplete__input"
+		[ngClass]="{'nvm-autocomplete__input--empty': valueIsEmpty}"
+		type="text"
+		(input)="onInput($event)"
+		(keydown)="keyPress($event)" />
 </nvm-chips>
-<input #acInput type="text" (input)="onInput($event)" (keydown)="keyPress($event)" />
 <nvm-suggestions
 	[(ngModel)]="suggestionsCollection"
 	[appendTo]="'body'"
@@ -11,7 +15,7 @@
 	[container]="'body'"
 	[adjustWidth]="true"
 	(selected)="onItemSelected($event)">
-	<div *nvm-autocomplete-element="let item">
+	<div class="nvm-autocomplete__suggestions suggestion__content" *nvm-autocomplete-element="let item">
 		{{item.label}}
 	</div>
 </nvm-suggestions>
