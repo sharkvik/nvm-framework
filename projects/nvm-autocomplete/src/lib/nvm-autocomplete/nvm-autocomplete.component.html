@@ -4,6 +4,7 @@
 	[allowSearch]="allowSearch"
 	(deleted)="onItemDeleted($event)"
 	(mousedown)="focused($event)"
+	[ngClass]="{'nvm-autocomplete__input--empty': valueIsEmpty}"
 	(selected)="focused()">
 	<div class="nvm-chip__content" *nvm-autocomplete-element="let item">
 		<span *ngIf="!chipTemplateOutlet">{{item.label}}</span>
@@ -13,7 +14,6 @@
 	</div>
 	<input #acInput
 		class="nvm-autocomplete__input"
-		[ngClass]="{'nvm-autocomplete__input--empty': valueIsEmpty}"
 		type="text"
 		(input)="onInput($event)"
 		(keydown)="keyPress($event)" />

@@ -24,7 +24,6 @@ nvm-autocomplete {
 				}
 				&__external-content {
 					flex-grow: 1;
-					width: 10px;
 					overflow: hidden;
 				}
 			}
@@ -36,6 +35,11 @@ nvm-autocomplete {
 			min-height: 30px;
 			width: 100%;
 			box-sizing: border-box;
+			&--empty {
+				.nvm-chips__external-content {
+					width: 10px;
+				}
+			}
 		}
 	}
 }
