@@ -18,10 +18,14 @@ body {
 		}
 	}
 	.autocomplete {
-		width: 200px;
 		padding: 10px;
 		box-sizing: border-box;
-		&__1 {
+		display: flex;
+		flex-flow: row wrap;
+		&__1,
+		&__2,
+		&__3 {
+			width: 200px;
 		}
 	}
 }

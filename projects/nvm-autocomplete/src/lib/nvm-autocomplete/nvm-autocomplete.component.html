@@ -1,13 +1,15 @@
-<nvm-chips class="nvm-autocomplete__chips" [(ngModel)]="innerModel" (deleted)="onItemDeleted($event)">
+<nvm-chips class="nvm-autocomplete__chips" [(ngModel)]="innerModel" (deleted)="onItemDeleted($event)" (mousedown)="focused($event)">
 	<div class="nvm-chip__content" *nvm-autocomplete-element="let item">
 		{{item.label}}
 	</div>
 	<input #acInput class="nvm-autocomplete__input"
 		[ngClass]="{'nvm-autocomplete__input--empty': valueIsEmpty}"
 		type="text"
+		(blur)="blured($event)"
 		(input)="onInput($event)"
 		(keydown)="keyPress($event)" />
 </nvm-chips>
+<button *ngIf="dropdown" (click)="dropDownClicked($event)">˅</button>
 <nvm-suggestions
 	[(ngModel)]="suggestionsCollection"
 	[appendTo]="'body'"

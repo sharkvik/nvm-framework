@@ -19,7 +19,7 @@ export const NVM_CHiPS_ACCESSOR = {
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NvmChipsComponent implements ControlValueAccessor, OnInit {
-	@Output() public selected: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
+	@Output() public selected: EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }> = new EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }>();
 	@Output() public deleted: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
 	public disabled: boolean;
 
@@ -46,7 +46,7 @@ export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 		this._detectChanges();
 	}
 
-	public select = (item: NvmAutocompleteItem): void => {
+	public select = (item: NvmAutocompleteItem, ev?: MouseEvent): void => {
 		if (isNil(item)) {
 			return;
 		}
@@ -57,7 +57,7 @@ export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 		});
 		item.selected = !item.selected;
 		this._selectedItem = item.selected ? item : undefined;
-		this.selected.next(this._selectedItem);
+		this.selected.next({ item: this._selectedItem, originalEvent: ev || new MouseEvent('click') });
 		this._detectChanges();
 	}
 

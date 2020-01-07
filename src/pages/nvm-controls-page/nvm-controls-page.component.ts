@@ -10,11 +10,7 @@ import { NvmAutocompleteItem } from 'projects/nvm-autocomplete/src/public-api';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NvmControlsPageComponent implements OnInit {
-	public acModel: NvmAutocompleteItem[] = [];
-	public acSuggestions: NvmAutocompleteItem[] = [];
 
-	public acModel1: NvmAutocompleteItem;
-	public acSuggestions1: NvmAutocompleteItem[] = [];
 	constructor() { }
 
 	public ngOnInit() {
@@ -28,11 +24,22 @@ export class NvmControlsPageComponent implements OnInit {
 		overly.hide();
 	}
 
+	public acModel: NvmAutocompleteItem[] = [];
+	public acSuggestions: NvmAutocompleteItem[] = [];
 	public search = (ev: {query: string, originalEvent: KeyboardEvent}): void => {
 		this.acSuggestions = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(x => new NvmAutocompleteItem(x, ev.query + x, x.toString()));
 	}
 
+	public acModel1: NvmAutocompleteItem;
+	public acSuggestions1: NvmAutocompleteItem[] = [];
 	public search1 = (ev: { query: string, originalEvent: KeyboardEvent }): void => {
 		this.acSuggestions1 = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(x => new NvmAutocompleteItem(x, ev.query + x, x.toString()));
+	}
+
+
+	public acModel3: NvmAutocompleteItem;
+	public acSuggestions3: NvmAutocompleteItem[] = [];
+	public search3 = (ev: { query: string, originalEvent: KeyboardEvent }): void => {
+		this.acSuggestions3 = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(x => new NvmAutocompleteItem(x, ev.query + x, x.toString()));
 	}
 }
