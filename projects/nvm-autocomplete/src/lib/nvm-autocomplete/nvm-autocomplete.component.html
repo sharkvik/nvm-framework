@@ -6,7 +6,10 @@
 	(mousedown)="focused($event)"
 	(selected)="focused()">
 	<div class="nvm-chip__content" *nvm-autocomplete-element="let item">
-		{{item.label}}
+		<span *ngIf="!chipTemplateOutlet">{{item.label}}</span>
+		<nvm-autocomplete-item-outlet *ngIf="chipTemplateOutlet" [template]="chipTemplateOutlet.templateRef"
+			[context]="{$implicit: item}">
+		</nvm-autocomplete-item-outlet>
 	</div>
 	<input #acInput
 		class="nvm-autocomplete__input"
@@ -24,6 +27,9 @@
 	[adjustWidth]="true"
 	(selected)="onItemSelected($event)">
 	<div class="nvm-autocomplete__suggestions suggestion__content" *nvm-autocomplete-element="let item">
-		{{item.label}}
+		<span *ngIf="!suggestionTemplateOutlet">{{item.label}}</span>
+		<nvm-autocomplete-item-outlet *ngIf="suggestionTemplateOutlet" [template]="suggestionTemplateOutlet.templateRef"
+			[context]="{$implicit: item}">
+		</nvm-autocomplete-item-outlet>
 	</div>
 </nvm-suggestions>

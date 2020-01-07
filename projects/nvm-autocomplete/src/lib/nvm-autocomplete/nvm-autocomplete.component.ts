@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, ViewChild, ElementRef, Input, forwardRef, ChangeDetectorRef, ViewRef, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy, NgZone } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, ViewChild, ElementRef, Input, forwardRef, ChangeDetectorRef, ViewRef, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy, NgZone, ContentChild } from '@angular/core';
 import { NvmAutocompleteItem } from './models/nvm-autocomplete-item';
 import { NvmChipsComponent } from './nvm-chips/nvm-chips.component';
 import { NvmSuggestionsComponent } from './nvm-suggestions/nvm-suggestions.component';
@@ -6,6 +6,8 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { debounce, isNil, isEmpty, cloneDeep } from 'lodash';
 import { NvmAutocompleteService } from './nvm-autocomplete.service';
 import { Subscription } from 'rxjs';
+import { NvmChipContent } from './directives/nvm-chip-content.directive';
+import { NvmSuggestionContent } from './directives/nvm-suggestion-content.directive';
 
 export const NVM_AUTOCOMPLETE_ACCESSOR = {
 	provide: NG_VALUE_ACCESSOR,
@@ -22,9 +24,11 @@ export const NVM_AUTOCOMPLETE_ACCESSOR = {
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, OnChanges, OnDestroy {
+	@ViewChild('acInput', { static: true }) public inputControl: ElementRef<HTMLInputElement>;
 	@ViewChild(NvmChipsComponent, { static: true }) public chipsControl: NvmChipsComponent;
 	@ViewChild(NvmSuggestionsComponent, { static: true }) public suggestionsControl: NvmSuggestionsComponent;
-	@ViewChild('acInput', { static: true }) public inputControl: ElementRef<HTMLInputElement>;
+	@ContentChild(NvmChipContent, { static: false }) public chipTemplateOutlet: NvmChipContent;
+	@ContentChild(NvmSuggestionContent, { static: false }) public suggestionTemplateOutlet: NvmSuggestionContent;
 
 	@Input() public multiple: boolean = true;
 	@Input() public customSuggestions: NvmAutocompleteItem[] = [];
@@ -37,6 +41,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	@Output() public input: EventEmitter<KeyboardEvent> = new EventEmitter<KeyboardEvent>();
 	@Output() public suggestionsChange: EventEmitter<NvmAutocompleteItem[]> = new EventEmitter<NvmAutocompleteItem[]>();
 	@Output() public selected: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
+	@Output() public customSelected: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
 	@Output() public deleted: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
 	@Output() public focus: EventEmitter<Event> = new EventEmitter<Event>();
 	@Output() public blur: EventEmitter<Event> = new EventEmitter<Event>();
@@ -108,15 +113,32 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	}
 
 	public ngOnChanges(changes: SimpleChanges): void {
-		if (isNil(changes.customSuggestions) || changes.customSuggestions.isFirstChange) {
-			return;
+		if (
+			!isNil(changes.customSuggestions) && !changes.customSuggestions.firstChange
+			|| !isNil(changes.suggestions) && !changes.suggestions.firstChange
+		) {
+			const collection = [...this.customSuggestions || [], ...this._suggestions || []];
+			if (isEmpty(collection)) {
+				const el = new NvmAutocompleteItem(null, 'Ничего не найдено', '');
+				el.isCustom = true;
+				el.isTemporary = true;
+				el.disabled = true;
+				this.customSuggestions = [el];
+				this.suggestionsCollection = [...this.customSuggestions, ...this._suggestions || []];
+			} else if (collection.some(x => !x.isTemporary)) {
+				this.customSuggestions = this.customSuggestions.filter(x => !x.isTemporary && x.isCustom);
+				this.suggestionsCollection = [...this.customSuggestions, ...this._suggestions || []];
+			}
 		}
-		const csChange = changes.customSuggestions;
-		if (JSON.stringify(csChange.previousValue) === JSON.stringify(csChange.currentValue)) {
-			return;
+		if (!isNil(changes.customSuggestions) && !changes.customSuggestions.firstChange) {
+			const csChange = changes.customSuggestions;
+			if (JSON.stringify(csChange.previousValue) === JSON.stringify(csChange.currentValue)) {
+				return;
+			}
+			this.customSuggestions.forEach(x => x.isCustom = true);
+			this.suggestionsCollection = [...this._suggestions, ...this.customSuggestions];
+			this._detectChanges();
 		}
-		this.suggestionsCollection = [...this._suggestions, ...this.customSuggestions];
-		this._detectChanges();
 	}
 
 	public onItemDeleted = (item: NvmAutocompleteItem): void => {
@@ -129,7 +151,11 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 		newItem.selected = false;
 		this.innerModel = [...(this.innerModel || []), newItem];
 		this.inputControl.nativeElement.value = '';
-		this.selected.emit(newItem);
+		if (!newItem.isCustom) {
+			this.selected.emit(newItem);
+		} else if (!newItem.disabled) {
+			this.customSelected.emit(newItem);
+		}
 		this.onModelChange(this.model);
 		if (this.dropdown) {
 			this.inputControl.nativeElement.focus();
@@ -139,8 +165,10 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	public onInput = (ev: KeyboardEvent): void => {
 		this._onComplete(ev);
 		this.input.emit(ev);
-		if (this.valueIsEmpty) {
+		if (this.valueIsEmpty && this.dropdown) {
 			setTimeout(() => this.suggestionsControl.overlay.adjust());
+		} else if (this.valueIsEmpty) {
+			this.suggestionsControl.overlay.hide();
 		}
 	}
 
@@ -224,11 +252,11 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 		this._detectChanges();
 	}
 
-	public focused = (ev: MouseEvent): void => {
+	public focused = (ev?: MouseEvent): void => {
 		if (this.dropdown) {
 			this.ddClicked.emit({
 				query: this.inputControl.nativeElement.value,
-				originalEvent: ev
+				originalEvent: ev || new MouseEvent('click')
 			});
 		}
 		this.inputControl.nativeElement.focus();

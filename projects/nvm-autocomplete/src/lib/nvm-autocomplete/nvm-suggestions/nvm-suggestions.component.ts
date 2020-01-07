@@ -108,7 +108,7 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 
 	public select = (item?: NvmAutocompleteItem, ev?: MouseEvent): void => {
 		item = item || this._hoverred;
-		if (isNil(item)) {
+		if (isNil(item) || item.disabled) {
 			return;
 		}
 		this.selected.emit({ item: item, originalEvent: ev });

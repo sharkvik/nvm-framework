@@ -47,4 +47,16 @@ export class NvmControlsPageComponent implements OnInit {
 	public search4 = (ev: { query: string, originalEvent: KeyboardEvent }): void => {
 		this.acSuggestions4 = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(x => new NvmAutocompleteItem(x, ev.query + x, ev.query + x));
 	}
+
+	public acModel5: NvmAutocompleteItem;
+	public acSuggestions5: NvmAutocompleteItem[] = [];
+	public search5 = (ev: { query: string, originalEvent: KeyboardEvent }): void => {
+		this.acSuggestions5 = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(x => new NvmAutocompleteItem(x, ev.query + x, ev.query + x));
+	}
+
+	public acModel6: NvmAutocompleteItem;
+	public acSuggestions6: NvmAutocompleteItem[] = [];
+	public search6 = (ev: { query: string, originalEvent: KeyboardEvent }): void => {
+		this.acSuggestions6 = [];
+	}
 }
