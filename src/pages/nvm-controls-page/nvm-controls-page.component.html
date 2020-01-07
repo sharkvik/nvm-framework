@@ -47,5 +47,12 @@
 		<nvm-autocomplete class="autocomplete__1" (complete)="search($event)" [(ngModel)]="acModel" [(suggestions)]="acSuggestions"></nvm-autocomplete>
 		<nvm-autocomplete class="autocomplete__2" (complete)="search1($event)" [multiple]="false" [(ngModel)]="acModel1" [(suggestions)]="acSuggestions1"></nvm-autocomplete>
 		<nvm-autocomplete class="autocomplete__3" (complete)="search3($event)" (ddClicked)="search3($event)" [(ngModel)]="acModel3" [(suggestions)]="acSuggestions3" [dropdown]="true"></nvm-autocomplete>
+		<nvm-autocomplete class="autocomplete__4" (complete)="search4($event)" (ddClicked)="search4($event)"
+			[(ngModel)]="acModel4"
+			[(suggestions)]="acSuggestions4"
+			[dropdown]="true"
+			[multiple]="false"
+			[allowDelete]="false"
+			[allowSearch]="false"></nvm-autocomplete>
 	</div>
 </div>

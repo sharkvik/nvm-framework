@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, forwardRef, ContentChild, ChangeDetectorRef, ViewRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, forwardRef, ContentChild, ChangeDetectorRef, ViewRef, Output, EventEmitter, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NvmAutocompleteItem } from '../models/nvm-autocomplete-item';
 import { NvmAutocompleteElement } from '../directives/nvm-autocomplete-element.directive';
@@ -21,6 +21,10 @@ export const NVM_CHiPS_ACCESSOR = {
 export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 	@Output() public selected: EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }> = new EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }>();
 	@Output() public deleted: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
+
+	@Input() public allowDelete: boolean;
+	@Input() public allowSearch: boolean;
+
 	public disabled: boolean;
 
 	public model: Set<NvmAutocompleteItem>;
@@ -37,8 +41,8 @@ export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 	}
 
 	public delete = (item: NvmAutocompleteItem, ev?: MouseEvent): void => {
-		if (!isNil(ev)) {
-			ev.stopPropagation();
+		if (!this.allowDelete) {
+			return;
 		}
 		this.model.delete(item);
 		this.deleted.emit(item);

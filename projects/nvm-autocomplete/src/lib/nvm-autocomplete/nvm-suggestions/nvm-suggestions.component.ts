@@ -20,7 +20,7 @@ export const NVM_SUGGESTIONS_ACCESSOR = {
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
-	@Output() public selected: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
+	@Output() public selected: EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }> = new EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }>();
 
 	@Input() public appendTo: ElementRef<HTMLElement> | HTMLElement | string;
 	@Input() public anchor: ElementRef<HTMLElement> | HTMLElement;
@@ -106,12 +106,12 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 		this.hover(model[selectedIndex + 1]);
 	}
 
-	public select = (item?: NvmAutocompleteItem): void => {
+	public select = (item?: NvmAutocompleteItem, ev?: MouseEvent): void => {
 		item = item || this._hoverred;
 		if (isNil(item)) {
 			return;
 		}
-		this.selected.emit(item);
+		this.selected.emit({ item: item, originalEvent: ev });
 		this._hoverred = undefined;
 		this.overlay.hide();
 	}

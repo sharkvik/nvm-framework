@@ -36,6 +36,10 @@ nvm-chips {
 				margin-left: 4px;
 				line-height: 15px;
 			}
+			&--nosearch {
+				background-color: transparent;
+				border-color: transparent;
+			}
 			&:nth-last-child(2) {
 				max-width: calc(100% - 24px);
 			}

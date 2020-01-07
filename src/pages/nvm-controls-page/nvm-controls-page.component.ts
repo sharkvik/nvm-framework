@@ -27,19 +27,24 @@ export class NvmControlsPageComponent implements OnInit {
 	public acModel: NvmAutocompleteItem[] = [];
 	public acSuggestions: NvmAutocompleteItem[] = [];
 	public search = (ev: {query: string, originalEvent: KeyboardEvent}): void => {
-		this.acSuggestions = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(x => new NvmAutocompleteItem(x, ev.query + x, x.toString()));
+		this.acSuggestions = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(x => new NvmAutocompleteItem(x, ev.query + x, ev.query + x));
 	}
 
 	public acModel1: NvmAutocompleteItem;
 	public acSuggestions1: NvmAutocompleteItem[] = [];
 	public search1 = (ev: { query: string, originalEvent: KeyboardEvent }): void => {
-		this.acSuggestions1 = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(x => new NvmAutocompleteItem(x, ev.query + x, x.toString()));
+		this.acSuggestions1 = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(x => new NvmAutocompleteItem(x, ev.query + x, ev.query + x));
 	}
-
 
 	public acModel3: NvmAutocompleteItem;
 	public acSuggestions3: NvmAutocompleteItem[] = [];
 	public search3 = (ev: { query: string, originalEvent: KeyboardEvent }): void => {
-		this.acSuggestions3 = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(x => new NvmAutocompleteItem(x, ev.query + x, x.toString()));
+		this.acSuggestions3 = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(x => new NvmAutocompleteItem(x, ev.query + x, ev.query + x));
+	}
+
+	public acModel4: NvmAutocompleteItem;
+	public acSuggestions4: NvmAutocompleteItem[] = [];
+	public search4 = (ev: { query: string, originalEvent: KeyboardEvent }): void => {
+		this.acSuggestions4 = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(x => new NvmAutocompleteItem(x, ev.query + x, ev.query + x));
 	}
 }
