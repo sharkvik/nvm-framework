@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, forwardRef, ChangeDetectorRef, ViewRef, Input, ElementRef, ContentChild, ViewChild, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { NvmAutocompleteItem } from '../models/nvm-autocomplete-item';
-import { debounce, isNil, throttle } from 'lodash';
+import { debounce, isNil } from 'lodash';
 import { NvmAutocompleteElement } from '../directives/nvm-autocomplete-element.directive';
-import { NvmOverlayComponent } from 'projects/nvm-overlay/src/public-api';
+import { NvmOverlayComponent } from 'nvm-overlay';
 
 export const NVM_SUGGESTIONS_ACCESSOR = {
 	provide: NG_VALUE_ACCESSOR,

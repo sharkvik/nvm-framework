@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
-import { NvmOverlayComponent } from 'projects/nvm-overlay/src/public-api';
-import { NvmAutocompleteItem } from 'projects/nvm-autocomplete/src/public-api';
+import { NvmOverlayComponent } from 'nvm-overlay';
+import { NvmAutocompleteItem } from 'nvm-autocomplete';
 
 @Component({
 	selector: 'nvm-nvm-controls-page',

@@ -1,5 +1,4 @@
 import { SimpleChanges, SimpleChange } from "@angular/core";
-import { isNil } from 'lodash';
 
 export function analyzeChanges<T>(changes: SimpleChanges, defValue: () => T): [boolean, T, T] {
 	const regExp = new RegExp(".*this\.(.+?)$");
