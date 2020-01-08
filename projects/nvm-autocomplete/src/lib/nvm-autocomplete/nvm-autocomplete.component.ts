@@ -8,6 +8,7 @@ import { NvmAutocompleteService } from './nvm-autocomplete.service';
 import { Subscription } from 'rxjs';
 import { NvmChipContent } from './directives/nvm-chip-content.directive';
 import { NvmSuggestionContent } from './directives/nvm-suggestion-content.directive';
+import { NvmDdButton } from './directives/nvm-dd-button.directive';
 
 export const NVM_AUTOCOMPLETE_ACCESSOR = {
 	provide: NG_VALUE_ACCESSOR,
@@ -29,6 +30,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	@ViewChild(NvmSuggestionsComponent, { static: true }) public suggestionsControl: NvmSuggestionsComponent;
 	@ContentChild(NvmChipContent, { static: false }) public chipTemplateOutlet: NvmChipContent;
 	@ContentChild(NvmSuggestionContent, { static: false }) public suggestionTemplateOutlet: NvmSuggestionContent;
+	@ContentChild(NvmDdButton, { static: false }) public ddTemplateOutlet: NvmDdButton;
 
 	@Input() public multiple: boolean = true;
 	@Input() public customSuggestions: NvmAutocompleteItem[] = [];

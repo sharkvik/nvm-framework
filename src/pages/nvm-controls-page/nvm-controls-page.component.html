@@ -53,7 +53,9 @@
 			[dropdown]="true"
 			[multiple]="false"
 			[allowDelete]="false"
-			[allowSearch]="false"></nvm-autocomplete>
+			[allowSearch]="false">
+			<button *nvm-dd-button="let item" (click)=item($event)>{{'#'}}</button>
+		</nvm-autocomplete>
 		<nvm-autocomplete class="autocomplete__5" (complete)="search5($event)" [(ngModel)]="acModel5" [(suggestions)]="acSuggestions5">
 			<span *nvm-chip-content="let item">
 				{{'{' + item.label + '}'}}

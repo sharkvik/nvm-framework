@@ -9,6 +9,8 @@ import { NvmSuggestionsComponent } from './nvm-autocomplete/nvm-suggestions/nvm-
 import { NvmOverlayModule } from 'nvm-overlay';
 import { NvmChipContent } from './nvm-autocomplete/directives/nvm-chip-content.directive';
 import { NvmSuggestionContent } from './nvm-autocomplete/directives/nvm-suggestion-content.directive';
+import { NvmDdButtonOutlet } from './nvm-autocomplete/directives/nvm-dd-button-outlet.directive';
+import { NvmDdButton } from './nvm-autocomplete/directives/nvm-dd-button.directive';
 
 
 @NgModule({
@@ -19,7 +21,9 @@ import { NvmSuggestionContent } from './nvm-autocomplete/directives/nvm-suggesti
 		NvmAutocompleteElement,
 		NvmSuggestionsComponent,
 		NvmChipContent,
-		NvmSuggestionContent
+		NvmSuggestionContent,
+		NvmDdButtonOutlet,
+		NvmDdButton
 	],
 	imports: [
 		CommonModule,
@@ -33,7 +37,9 @@ import { NvmSuggestionContent } from './nvm-autocomplete/directives/nvm-suggesti
 		NvmAutocompleteElement,
 		NvmSuggestionsComponent,
 		NvmChipContent,
-		NvmSuggestionContent
+		NvmSuggestionContent,
+		NvmDdButtonOutlet,
+		NvmDdButton
 	]
 })
 export class NvmAutocompleteModule { }

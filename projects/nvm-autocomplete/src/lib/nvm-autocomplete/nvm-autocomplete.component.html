@@ -18,7 +18,12 @@
 		(input)="onInput($event)"
 		(keydown)="keyPress($event)" />
 </nvm-chips>
-<button *ngIf="dropdown" (click)="dropDownClicked($event)">˅</button>
+<ng-container *ngIf="dropdown">
+	<button *ngIf="!ddTemplateOutlet" (click)="dropDownClicked($event)">˅</button>
+	<nvm-dd-button-outlet *ngIf="ddTemplateOutlet" [template]="ddTemplateOutlet.templateRef"
+		[context]="{$implicit: dropDownClicked}">
+	</nvm-dd-button-outlet>
+</ng-container>
 <nvm-suggestions
 	[(ngModel)]="suggestionsCollection"
 	[appendTo]="'body'"
