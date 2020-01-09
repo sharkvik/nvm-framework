@@ -229,7 +229,6 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 			return;
 		}
 		this._appendTo.appendChild(this._host.nativeElement);
-		this._host.nativeElement.style.position = 'absolute';
 	}
 
 	private _detectChanges = (): void => {

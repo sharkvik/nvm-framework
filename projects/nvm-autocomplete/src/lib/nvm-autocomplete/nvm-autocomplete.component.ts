@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, ViewChild, ElementRef, Input, forwardRef, ChangeDetectorRef, ViewRef, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy, NgZone, ContentChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, ViewChild, ElementRef, Input, forwardRef, ChangeDetectorRef, ViewRef, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy, NgZone, ContentChild, Attribute } from '@angular/core';
 import { NvmAutocompleteItem } from './models/nvm-autocomplete-item';
 import { NvmChipsComponent } from './nvm-chips/nvm-chips.component';
 import { NvmSuggestionsComponent } from './nvm-suggestions/nvm-suggestions.component';
@@ -37,6 +37,8 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	@Input() public dropdown: boolean = false;
 	@Input() public allowDelete: boolean = true;
 	@Input() public allowSearch: boolean = true;
+
+	@Input() public placeholder: string;
 
 	@Output() public complete: EventEmitter<{ query: string, originalEvent: KeyboardEvent }> = new EventEmitter<{ query: string, originalEvent: KeyboardEvent }>();
 	@Output() public ddClicked: EventEmitter<{ query: string, originalEvent: MouseEvent }> = new EventEmitter<{ query: string, originalEvent: MouseEvent }>();
@@ -108,6 +110,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	}
 
 	public ngOnInit(): void {
+		debugger;
 	}
 
 	public ngOnDestroy(): void {
@@ -141,6 +144,9 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 			this.suggestionsCollection = [...this._suggestions, ...this.customSuggestions];
 			this._detectChanges();
 		}
+		if (!isNil(changes.placeholder)) {
+			this._detectChanges();
+		}
 	}
 
 	public onItemDeleted = (item: NvmAutocompleteItem): void => {
@@ -168,7 +174,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 		this._onComplete(ev);
 		this.input.emit(ev);
 		if (this.valueIsEmpty && this.dropdown) {
-			setTimeout(() => this.suggestionsControl.overlay.adjust());
+			setTimeout(this._showSuggestions);
 		} else if (this.valueIsEmpty) {
 			this.suggestionsControl.overlay.hide();
 		}
@@ -177,7 +183,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	public dropDownClicked = (ev?: MouseEvent): void => {
 		this._onDDClick(ev);
 		if (this.valueIsEmpty) {
-			setTimeout(() => this.suggestionsControl.overlay.adjust());
+			setTimeout(this._showSuggestions);
 		}
 	}
 
@@ -301,6 +307,14 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 			return;
 		}
 		this.blured(new FocusEvent('blur', ev))
+	}
+
+	private _showSuggestions = () => {
+		if (this.suggestionsControl.overlay.isVisible) {
+			this.suggestionsControl.overlay.adjust();
+		} else {
+			this.suggestionsControl.overlay.show();
+		}
 	}
 
 	private _detectChanges = debounce((): void => {

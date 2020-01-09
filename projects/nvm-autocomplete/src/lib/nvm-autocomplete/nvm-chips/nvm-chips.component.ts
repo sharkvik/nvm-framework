@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, forwardRef, ContentChild, ChangeDetectorRef, ViewRef, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, forwardRef, ContentChild, ChangeDetectorRef, ViewRef, Output, EventEmitter, Input, Attribute } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NvmAutocompleteItem } from '../models/nvm-autocomplete-item';
 import { NvmAutocompleteElement } from '../directives/nvm-autocomplete-element.directive';
@@ -24,6 +24,8 @@ export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 
 	@Input() public allowDelete: boolean;
 	@Input() public allowSearch: boolean;
+
+	@Attribute('placeholder') public placeholder: string;
 
 	public disabled: boolean;
 

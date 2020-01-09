@@ -1,10 +1,11 @@
+<span (mousedown)="focused($event)" class="nvm-autocomplete__placeholder" *ngIf="placeholder && !innerModel?.length && valueIsEmpty" [innerText]="placeholder"></span>
 <nvm-chips class="nvm-autocomplete__chips"
 	[(ngModel)]="innerModel"
 	[allowDelete]="allowDelete"
 	[allowSearch]="allowSearch"
+	[ngClass]="{'nvm-autocomplete__input--empty': valueIsEmpty}"
 	(deleted)="onItemDeleted($event)"
 	(mousedown)="focused($event)"
-	[ngClass]="{'nvm-autocomplete__input--empty': valueIsEmpty}"
 	(selected)="focused()">
 	<div class="nvm-chip__content" *nvm-autocomplete-element="let item">
 		<span *ngIf="!chipTemplateOutlet">{{item.label}}</span>

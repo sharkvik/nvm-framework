@@ -5,6 +5,7 @@ nvm-autocomplete {
 	min-height: 32px;
 	width: 100%;
 	box-sizing: border-box;
+	position: relative;
 	.nvm-autocomplete {
 		&__chips {
 			overflow: hidden;
@@ -35,11 +36,23 @@ nvm-autocomplete {
 			min-height: 30px;
 			width: 100%;
 			box-sizing: border-box;
+			background: transparent;
 			&--empty {
 				.nvm-chips__external-content {
 					width: 10px;
 				}
 			}
+		}
+		&__placeholder {
+			height: 100%;
+			top: 0;
+			left: 0;
+			position: absolute;
+			width: 100%;
+			padding: 6px;
+			color: rgba(0, 0, 0, 0.2);
+			box-sizing: border-box;
+			z-index: -1;
 		}
 	}
 }
