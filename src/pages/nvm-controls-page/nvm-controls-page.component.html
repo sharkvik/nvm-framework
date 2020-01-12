@@ -54,7 +54,7 @@
 			[multiple]="false"
 			[allowDelete]="false"
 			[allowSearch]="false">
-			<button *nvm-dd-button="let item" (click)=item($event)>{{'#'}}</button>
+			<button *nvm-dd-button="let item" (click)="call(item, $event)">{{'#'}}</button>
 		</nvm-autocomplete>
 		<nvm-autocomplete class="autocomplete__5" (complete)="search5($event)" [(ngModel)]="acModel5" [(suggestions)]="acSuggestions5">
 			<span *nvm-chip-content="let item">
@@ -64,6 +64,12 @@
 				{{'{' + item.label + '}: [' + item.value + ']'}}
 			</span>
 		</nvm-autocomplete>
-		<nvm-autocomplete placeholder="123456" class="autocomplete__6" (complete)="search6($event)" [(ngModel)]="acModel6" [(suggestions)]="acSuggestions6"></nvm-autocomplete>
+		<nvm-autocomplete placeholder="123456" class="autocomplete__6" (complete)="search6($event)" [(ngModel)]="acModel6" [(suggestions)]="acSuggestions6" (focus)="onfocus6(ov1)"></nvm-autocomplete>
+		<span #anch></span>
+		<nvm-overlay #ov1 [style.width]="'500px'" [style.height]="'500px'" [container]="'body'" [anchor]="anch"
+			[appendTo]="'body'">
+			<nvm-autocomplete placeholder="123456" class="autocomplete__6" (complete)="search7($event)" [(ngModel)]="acModel7"
+				[(suggestions)]="acSuggestions7"></nvm-autocomplete>
+		</nvm-overlay>
 	</div>
 </div>

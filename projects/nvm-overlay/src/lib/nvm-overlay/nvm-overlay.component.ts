@@ -64,6 +64,7 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 	private _maxHeight: number;
 	private _width: number;
 	private _containerRect: any;
+	private _initialStyles: CSSStyleDeclaration;
 
 	constructor(private _host: ElementRef<HTMLElement>, private _cd: ChangeDetectorRef, private _overlayService: NvmOverlayService) {
 		this.id = this._newGuid;
@@ -189,37 +190,40 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 	}
 
 	private _fillPosition = (): void => {
+		if (isNil(this._initialStyles)) {
+			this._initialStyles = this._host.nativeElement.style;
+		}
 		if (!isNil(this._top) && this._top !== -9999) {
 			this._host.nativeElement.style.top = `${this._top}px`;
 		} else if (this._top !== -9999) {
-			this._host.nativeElement.style.top = 'initial';
+			this._host.nativeElement.style.top = this._initialStyles.top;
 		}
 		if (!isNil(this._left) && this._left !== -9999) {
 			this._host.nativeElement.style.left = `${this._left}px`;
 		} else if (this._left !== -9999) {
-			this._host.nativeElement.style.left = 'initial';
+			this._host.nativeElement.style.left = this._initialStyles.left;
 		}
 		if (!isNil(this._bottom)) {
 			this._host.nativeElement.style.bottom = `${this._bottom}px`;
 		} else {
-			this._host.nativeElement.style.bottom = 'initial';
+			this._host.nativeElement.style.bottom = this._initialStyles.bottom;
 		}
 		if (!isNil(this._right)) {
 			this._host.nativeElement.style.right = `${this._right}px`;
 		} else {
-			this._host.nativeElement.style.right = 'initial';
+			this._host.nativeElement.style.right = this._initialStyles.right;
 		}
 		if (!isNil(this._maxHeight)) {
 			this._host.nativeElement.style.maxHeight = `${this._maxHeight}px`;
 			this._host.nativeElement.style.overflowY = 'auto';
 		} else {
-			this._host.nativeElement.style.maxHeight = 'initial';
-			this._host.nativeElement.style.overflowY = 'initial';
+			this._host.nativeElement.style.maxHeight = this._initialStyles.maxHeight;
+			this._host.nativeElement.style.overflowY = this._initialStyles.overflowY;
 		}
 		if (!isNil(this._width)) {
 			this._host.nativeElement.style.width = `${this._width}px`;
 		} else {
-			this._host.nativeElement.style.width = 'initial';
+			this._host.nativeElement.style.width = this._initialStyles.width;
 		}
 		this._host.nativeElement.className = this.position;
 	}

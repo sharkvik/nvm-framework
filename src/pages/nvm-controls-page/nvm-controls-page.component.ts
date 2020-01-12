@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
-import { NvmOverlayComponent } from 'nvm-overlay';
 import { NvmAutocompleteItem } from 'projects/nvm-autocomplete/src/public-api';
+import { NvmOverlayComponent } from 'projects/nvm-overlay/src/public-api';
 
 @Component({
 	selector: 'nvm-nvm-controls-page',
@@ -10,10 +10,13 @@ import { NvmAutocompleteItem } from 'projects/nvm-autocomplete/src/public-api';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NvmControlsPageComponent implements OnInit {
-
 	constructor() { }
 
 	public ngOnInit() {
+	}
+
+	public call = (func: (ev: MouseEvent) => void, ev: MouseEvent) => {
+		func(ev);
 	}
 
 	public showOverlay = (overly: NvmOverlayComponent): void => {
@@ -26,7 +29,7 @@ export class NvmControlsPageComponent implements OnInit {
 
 	public acModel: NvmAutocompleteItem[] = [];
 	public acSuggestions: NvmAutocompleteItem[] = [];
-	public search = (ev: {query: string, originalEvent: KeyboardEvent}): void => {
+	public search = (ev: { query: string, originalEvent: KeyboardEvent }): void => {
 		this.acSuggestions = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(x => new NvmAutocompleteItem(x, ev.query + x, ev.query + x));
 	}
 
@@ -58,5 +61,15 @@ export class NvmControlsPageComponent implements OnInit {
 	public acSuggestions6: NvmAutocompleteItem[] = [];
 	public search6 = (ev: { query: string, originalEvent: KeyboardEvent }): void => {
 		this.acSuggestions6 = [];
+	}
+
+
+	public acModel7: NvmAutocompleteItem;
+	public acSuggestions7: NvmAutocompleteItem[] = [];
+	public search7 = (ev: { query: string, originalEvent: KeyboardEvent }): void => {
+		this.acSuggestions7 = [];
+	}
+	public onfocus6 = (ov: NvmOverlayComponent) => {
+		ov.show();
 	}
 }

@@ -5,7 +5,7 @@ import { NvmSuggestionsComponent } from './nvm-suggestions/nvm-suggestions.compo
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { debounce, isNil, isEmpty, cloneDeep } from 'lodash';
 import { NvmAutocompleteService } from './nvm-autocomplete.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable, of } from 'rxjs';
 import { NvmChipContent } from './directives/nvm-chip-content.directive';
 import { NvmSuggestionContent } from './directives/nvm-suggestion-content.directive';
 import { NvmDdButton } from './directives/nvm-dd-button.directive';
@@ -37,6 +37,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	@Input() public dropdown: boolean = false;
 	@Input() public allowDelete: boolean = true;
 	@Input() public allowSearch: boolean = true;
+	@Input() public mapToValue: (item: NvmAutocompleteItem) => Observable<NvmAutocompleteItem> = (item: NvmAutocompleteItem) => of(item);
 
 	@Input() public placeholder: string;
 
@@ -110,7 +111,6 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	}
 
 	public ngOnInit(): void {
-		debugger;
 	}
 
 	public ngOnDestroy(): void {
@@ -155,19 +155,23 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	}
 
 	public onItemSelected = (item: { item: NvmAutocompleteItem, originalEvent: MouseEvent }): void => {
-		const newItem = cloneDeep(item.item);
-		newItem.selected = false;
-		this.innerModel = [...(this.innerModel || []), newItem];
-		this.inputControl.nativeElement.value = '';
-		if (!newItem.isCustom) {
-			this.selected.emit(newItem);
-		} else if (!newItem.disabled) {
-			this.customSelected.emit(newItem);
-		}
-		this.onModelChange(this.model);
-		if (this.dropdown) {
-			this.inputControl.nativeElement.focus();
-		}
+		this.disabled = true;
+		this.mapToValue(item.item)
+			.subscribe((newItem: NvmAutocompleteItem) => {
+				this.disabled = false;
+				newItem.selected = false;
+				this.innerModel = [...(this.innerModel || []), newItem];
+				this.inputControl.nativeElement.value = '';
+				if (!newItem.isCustom) {
+					this.selected.emit(newItem);
+				} else if (!newItem.disabled) {
+					this.customSelected.emit(newItem);
+				}
+				this.onModelChange(this.model);
+				if (this.dropdown) {
+					this.inputControl.nativeElement.focus();
+				}
+			}, () => this.disabled = false);
 	}
 
 	public onInput = (ev: KeyboardEvent): void => {
