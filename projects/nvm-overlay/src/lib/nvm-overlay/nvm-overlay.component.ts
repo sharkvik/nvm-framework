@@ -1,4 +1,17 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, Input, ElementRef, OnDestroy, ChangeDetectorRef, ViewRef, HostBinding, HostListener, Output, EventEmitter } from '@angular/core';
+import {
+	Component,
+	OnInit,
+	ViewEncapsulation,
+	ChangeDetectionStrategy,
+	Input,
+	ElementRef,
+	OnDestroy,
+	ChangeDetectorRef,
+	ViewRef,
+	HostBinding,
+	Output,
+	EventEmitter
+} from '@angular/core';
 import { isNil } from 'lodash';
 import { Subscription, Subject, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';

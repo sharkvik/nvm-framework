@@ -3,7 +3,7 @@ import { NvmAutocompleteItem } from './models/nvm-autocomplete-item';
 import { NvmChipsComponent } from './nvm-chips/nvm-chips.component';
 import { NvmSuggestionsComponent } from './nvm-suggestions/nvm-suggestions.component';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { debounce, isNil, isEmpty, cloneDeep } from 'lodash';
+import { debounce, isNil, isEmpty } from 'lodash';
 import { NvmAutocompleteService } from './nvm-autocomplete.service';
 import { Subscription, Observable, of } from 'rxjs';
 import { NvmChipContent } from './directives/nvm-chip-content.directive';
