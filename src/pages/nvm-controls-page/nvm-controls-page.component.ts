@@ -3,7 +3,7 @@ import { NvmAutocompleteItem } from 'projects/nvm-autocomplete/src/public-api';
 import { NvmOverlayComponent } from 'projects/nvm-overlay/src/public-api';
 
 @Component({
-	selector: 'nvm-nvm-controls-page',
+	selector: 'nvm-controls-page',
 	templateUrl: './nvm-controls-page.component.html',
 	styleUrls: ['./nvm-controls-page.component.scss'],
 	encapsulation: ViewEncapsulation.None,

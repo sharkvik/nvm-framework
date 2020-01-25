@@ -21,6 +21,7 @@ export const NVM_CHiPS_ACCESSOR = {
 export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 	@Output() public selected: EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }> = new EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }>();
 	@Output() public deleted: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
+	@Output() public itemRemovedLeft: EventEmitter<string> = new EventEmitter<string>();
 
 	@Input() public allowDelete: boolean;
 	@Input() public allowSearch: boolean;
@@ -114,10 +115,13 @@ export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 		const model = Array.from(this.model);
 		const selectedIndex = model.indexOf(this._selectedItem);
 		if (selectedIndex === 0) {
+			this.itemRemovedLeft.next(this._selectedItem.label);
 			this.delete(this._selectedItem);
 			this._selectedItem = undefined;
 			return;
 		}
+		const item = model[selectedIndex - 1];
+		this.itemRemovedLeft.next(this._selectedItem.label);
 		this.delete(model[selectedIndex - 1]);
 	}
 

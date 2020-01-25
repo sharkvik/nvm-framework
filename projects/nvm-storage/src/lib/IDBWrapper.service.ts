@@ -46,11 +46,11 @@ export class IDBWrapperService {
 		return isActive$;
 	}
 
-	public insert(obj: IdItem): Observable<IdItem> {
-		const store = this._findTable(obj.constructor.name);
+	public insert(name: string, obj: IdItem): Observable<IdItem> {
+		const store = this._findTable(name);
 		return new Observable<IdItem>((result$: Subscriber<IdItem>) => {
 			if (isNil(store)) {
-				result$.error(`Store ${obj.constructor.name} does not exists.`);
+				result$.error(`Store ${name} does not exists.`);
 				result$.complete();
 				return;
 			}
@@ -58,7 +58,7 @@ export class IDBWrapperService {
 			request.onsuccess = (ev) => {
 				const target = ev.target as IDBRequest;
 				obj.id = target.result;
-				this.update(obj, obj.id)
+				this.update(name, obj, obj.id)
 					.subscribe((newObj: IdItem) => {
 						result$.next(newObj);
 						result$.complete();
@@ -71,8 +71,8 @@ export class IDBWrapperService {
 		});
 	}
 
-	public delete(table: string, key: string): Observable<boolean> {
-		const store = this._findTable(table);
+	public delete(name: string, key: string): Observable<boolean> {
+		const store = this._findTable(name);
 		return new Observable<boolean>((result$: Subscriber<boolean>) => {
 			if (isNil(store)) {
 				result$.next(false);
@@ -91,8 +91,8 @@ export class IDBWrapperService {
 		});
 	}
 
-	public update(obj: IdItem, key: number): Observable<IdItem> {
-		const store = this._findTable(obj.constructor.name);
+	public update(name: string, obj: IdItem, key: number): Observable<IdItem> {
+		const store = this._findTable(name);
 		return new Observable<IdItem>((result$: Subscriber<IdItem>) => {
 			if (isNil(store)) {
 				result$.next(null);
@@ -111,8 +111,8 @@ export class IDBWrapperService {
 		});
 	}
 
-	public select<T>(table: string, query?: IDBKeyRange): Observable<Array<T>> {
-		const store = this._findTable(table);
+	public select<T>(name: string, query?: IDBKeyRange): Observable<Array<T>> {
+		const store = this._findTable(name);
 		return new Observable<Array<T>>((result$: Subscriber<Array<T>>) => {
 			if (isNil(store)) {
 				result$.next(null);

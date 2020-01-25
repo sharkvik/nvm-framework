@@ -6,11 +6,11 @@ import { NvmChipsComponent } from './nvm-autocomplete/nvm-chips/nvm-chips.compon
 import { NvmAutocompleteItemOutlet } from './nvm-autocomplete/directives/nvm-autocomplete-item-outlet.directive';
 import { NvmAutocompleteElement } from './nvm-autocomplete/directives/nvm-autocomplete-element.directive';
 import { NvmSuggestionsComponent } from './nvm-autocomplete/nvm-suggestions/nvm-suggestions.component';
-import { NvmOverlayModule } from 'nvm-overlay';
 import { NvmChipContent } from './nvm-autocomplete/directives/nvm-chip-content.directive';
 import { NvmSuggestionContent } from './nvm-autocomplete/directives/nvm-suggestion-content.directive';
 import { NvmDdButtonOutlet } from './nvm-autocomplete/directives/nvm-dd-button-outlet.directive';
 import { NvmDdButton } from './nvm-autocomplete/directives/nvm-dd-button.directive';
+import { NvmOverlayModule } from 'projects/nvm-overlay/src/public-api';
 
 
 @NgModule({

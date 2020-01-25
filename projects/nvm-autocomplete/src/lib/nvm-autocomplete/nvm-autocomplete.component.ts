@@ -288,6 +288,10 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 		});
 	}
 
+	public onItemLeftRemoved = (label: string): void => {
+		this.inputControl.nativeElement.value = label.substring(0, label.length);
+	}
+
 	private _onDDClick = (ev: MouseEvent): void => {
 		if (this.suggestionsControl.overlay.isVisible) {
 			setTimeout(() => this.suggestionsControl.overlay.hide());

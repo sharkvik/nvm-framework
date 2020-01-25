@@ -4,6 +4,7 @@
 	[allowDelete]="allowDelete"
 	[allowSearch]="allowSearch"
 	[ngClass]="{'nvm-autocomplete__input--empty': valueIsEmpty}"
+	(itemRemovedLeft)="onItemLeftRemoved($event)"
 	(deleted)="onItemDeleted($event)"
 	(mousedown)="focused($event)"
 	(selected)="focused()">
