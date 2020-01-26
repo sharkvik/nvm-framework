@@ -46,6 +46,8 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 	@Input() public container: ElementRef<HTMLElement> | HTMLElement | string;
 	@Input() public adjustWidth: boolean = false;
 	@Input() public adjustHeight: boolean = true;
+	@Input() public maxHeight: number;
+	@Input() public align: string = 'left';
 
 	public get isVisible() {
 		return this._display;
@@ -61,11 +63,12 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 
 	public id: string;
 	public position: string = 'bottom';
+	@HostBinding('@fade')
+	public apear: string = 'hidden';
+
 	private _appendTo: HTMLElement;
 	private _anchor: HTMLElement;
 	private _container: HTMLElement;
-	@HostBinding('@fade')
-	public apear: string = 'hidden';
 	private _display: boolean = false;
 	private _show: Subject<any> = new Subject<any>();
 	private _subscriptions: Subscription = new Subscription();
@@ -143,45 +146,46 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 			return;
 		}
 		const anchorRectangle = this._anchor.getBoundingClientRect();
+		const overlayRectangle = this._host.nativeElement.getBoundingClientRect();
+		const bodyRectangle = document.body.getBoundingClientRect();
+		this._left = Math.min(anchorRectangle.left, bodyRectangle.width - overlayRectangle.width);
+		if (this.align !== 'left') {
+			this._left = Math.max(anchorRectangle.left + anchorRectangle.width - overlayRectangle.width, 0);
+		}
 		if (isNil(this.container)) {
 			this._top = anchorRectangle.bottom;
-			this._left = anchorRectangle.left;
 			return;
 		}
 		this._containerRect = this._container.getBoundingClientRect();
-		const overlayRectangle = this._host.nativeElement.getBoundingClientRect();
 		const bottomDifference = this._containerRect.bottom - anchorRectangle.bottom - overlayRectangle.height;
 		const topDifference = anchorRectangle.top - this._containerRect.top - overlayRectangle.height;
 
 		if (this.adjustWidth) {
 			this._width = anchorRectangle.width;
 		}
-
 		if (bottomDifference > 5) {
 			this._top = anchorRectangle.bottom + window.scrollY;
-			this._left = anchorRectangle.left;
 			return;
 		}
 		if (topDifference > 5) {
 			this.position = 'top';
 			this._bottom = window.innerHeight - anchorRectangle.top - window.scrollY;
-			this._left = anchorRectangle.left;
 			return;
 		}
 		if (!this.adjustHeight) {
 			this._top = anchorRectangle.bottom + window.scrollY;
-			this._left = anchorRectangle.left;
 			return;
 		}
 		if (topDifference > bottomDifference) {
 			this.position = 'top';
 			this._bottom = window.innerHeight - anchorRectangle.top - window.scrollY;
-			this._left = anchorRectangle.left;
 			this._maxHeight = anchorRectangle.top - this._containerRect.top;
 		} else {
 			this._top = anchorRectangle.bottom + window.scrollY;
-			this._left = anchorRectangle.left;
 			this._maxHeight = this._containerRect.bottom - anchorRectangle.bottom;
+		}
+		if (!isNil(this.maxHeight)) {
+			this._maxHeight = Math.min(this.maxHeight, this._maxHeight);
 		}
 	}
 
@@ -209,6 +213,9 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 		if (!isNil(this._top) && this._top !== -9999) {
 			this._host.nativeElement.style.top = `${this._top}px`;
 		} else if (this._top !== -9999) {
+			if (this._initialStyles.top === '-9999px') {
+				this._initialStyles.top = '';
+			}
 			this._host.nativeElement.style.top = this._initialStyles.top;
 		}
 		if (!isNil(this._left) && this._left !== -9999) {
