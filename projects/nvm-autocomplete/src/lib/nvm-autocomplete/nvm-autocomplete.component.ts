@@ -1,4 +1,21 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, ViewChild, ElementRef, Input, forwardRef, ChangeDetectorRef, ViewRef, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy, NgZone, ContentChild, Attribute } from '@angular/core';
+import {
+	Component,
+	OnInit,
+	ViewEncapsulation,
+	ChangeDetectionStrategy,
+	ViewChild,
+	ElementRef,
+	Input,
+	forwardRef,
+	ChangeDetectorRef,
+	ViewRef,
+	Output,
+	EventEmitter,
+	OnChanges,
+	SimpleChanges,
+	OnDestroy,
+	ContentChild
+} from '@angular/core';
 import { NvmAutocompleteItem } from './models/nvm-autocomplete-item';
 import { NvmChipsComponent } from './nvm-chips/nvm-chips.component';
 import { NvmSuggestionsComponent } from './nvm-suggestions/nvm-suggestions.component';
@@ -318,9 +335,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	}
 
 	private _showSuggestions = () => {
-		if (this.suggestionsControl.overlay.isVisible) {
-			this.suggestionsControl.overlay.adjust();
-		} else {
+		if (!this.suggestionsControl.overlay.isVisible) {
 			this.suggestionsControl.overlay.show();
 		}
 	}
