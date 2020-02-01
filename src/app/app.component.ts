@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { EntityEventHandlerProvider, IEntity, EntityChagesProvider, FieldChanges } from 'nvm-entity';
+import { EntityEventHandlerProvider, IEntity, EntityChagesProvider, FieldChanges } from '@nvm/nvm-entity';
 import { interval, Observable } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
-import { NvmCache } from 'nvm-cache';
+import { NvmCache } from '@nvm/nvm-cache';
 import { isNil } from 'lodash';
-import { NvmSettingsService } from 'nvm-settings';
 import * as _ from 'lodash';
+import { NvmSettingsService } from '@nvm/nvm-settings/src/public_api';
 
 export class Model extends IEntity<{ id: string, name: string, type: string }> {
 	constructor(public id: string, public name: string, public type: string) {
@@ -135,7 +135,7 @@ export class AppComponent implements OnInit {
 			console.log(`field: 'type'; entityId: ${this._model.id}; prev: ${c.previousValue}; cur: ${c.currentValue}`);
 		});
 
-		const entitySubj = this._eehp.createHandler(this._model).entityHandler()
+		const entitySubj = this._eehp.createHandler(this._model).entityHandler();
 		entitySubj.subscribe((c) => {
 			console.log(JSON.stringify(c.changes));
 		});

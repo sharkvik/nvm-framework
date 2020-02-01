@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartsBlock, Chart, ChartType } from 'nvm-charts';
+import { ChartsBlock, Chart, ChartType } from '@nvm/nvm-charts';
 import { cloneDeep } from 'lodash';
 
 @Component({
@@ -263,7 +263,7 @@ export class NvmChartsComponent implements OnInit {
 					}
 				}
 			})]
-		}
+		};
 		const clone = cloneDeep(donut);
 		clone.type = ChartType.Doughnut;
 		this.charts1 = {

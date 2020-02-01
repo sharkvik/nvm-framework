@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { NvmSubject } from 'nvm-cache';
+import { NvmSubject } from '@nvm/nvm-cache';
 import { tap, map } from 'rxjs/operators';
 
 @Injectable({
@@ -26,7 +26,7 @@ export class NvmSettingsService {
 	}
 
 	public getAsync<T>(key: string): Observable<T | null> {
-		return this._settings.getOnce().pipe(map((val: any) => val[key]))
+		return this._settings.getOnce().pipe(map((val: any) => val[key]));
 	}
 
 	public get<T>(key: string): T | null {

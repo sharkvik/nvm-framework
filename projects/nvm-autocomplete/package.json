@@ -18,6 +18,7 @@
 		"nvm-overlay": "0.0.2"
 	},
 	"devDependencies": {
+		"@types/lodash": "^4.14.149",
 		"ng-packagr": "^5.7.1",
 		"scss-bundle": "^3.0.2",
 		"ts-node": "^8.6.1"

@@ -1,7 +1,7 @@
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { NvmSettingsModule, NvmSettingsService } from 'nvm-settings';
+import { NvmSettingsModule, NvmSettingsService } from '@nvm/nvm-settings';
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

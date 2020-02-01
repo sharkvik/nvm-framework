@@ -42,35 +42,6 @@ export const NVM_AUTOCOMPLETE_ACCESSOR = {
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, OnChanges, OnDestroy {
-	@ViewChild('acInput', { static: true }) public inputControl: ElementRef<HTMLInputElement>;
-	@ViewChild(NvmChipsComponent, { static: true }) public chipsControl: NvmChipsComponent;
-	@ViewChild(NvmSuggestionsComponent, { static: true }) public suggestionsControl: NvmSuggestionsComponent;
-	@ContentChild(NvmChipContent, { static: false }) public chipTemplateOutlet: NvmChipContent;
-	@ContentChild(NvmSuggestionContent, { static: false }) public suggestionTemplateOutlet: NvmSuggestionContent;
-	@ContentChild(NvmDdButton, { static: false }) public ddTemplateOutlet: NvmDdButton;
-
-	@Input() public multiple: boolean = true;
-	@Input() public customSuggestions: NvmAutocompleteItem[] = [];
-	@Input() public dropdown: boolean = false;
-	@Input() public allowDelete: boolean = true;
-	@Input() public allowSearch: boolean = true;
-	@Input() public mapToValue: (item: NvmAutocompleteItem) => Observable<NvmAutocompleteItem> = (item: NvmAutocompleteItem) => of(item);
-
-	@Input() public placeholder: string;
-
-	@Output() public complete: EventEmitter<{ query: string, originalEvent: KeyboardEvent }> = new EventEmitter<{ query: string, originalEvent: KeyboardEvent }>();
-	@Output() public ddClicked: EventEmitter<{ query: string, originalEvent: MouseEvent }> = new EventEmitter<{ query: string, originalEvent: MouseEvent }>();
-	@Output() public input: EventEmitter<KeyboardEvent> = new EventEmitter<KeyboardEvent>();
-	@Output() public suggestionsChange: EventEmitter<NvmAutocompleteItem[]> = new EventEmitter<NvmAutocompleteItem[]>();
-	@Output() public selected: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
-	@Output() public customSelected: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
-	@Output() public deleted: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
-	@Output() public focus: EventEmitter<Event> = new EventEmitter<Event>();
-	@Output() public blur: EventEmitter<Event> = new EventEmitter<Event>();
-
-	public suggestionsCollection: NvmAutocompleteItem[] = [];
-	public disabled: boolean = false;
-	public isInFocus: boolean = false;
 
 	@Input() public set suggestions(val: NvmAutocompleteItem[]) {
 		this._suggestions = val;
@@ -114,11 +85,6 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 		}
 	}
 
-	public innerModel: NvmAutocompleteItem[];
-
-	private _suggestions: NvmAutocompleteItem[] = [];
-	private _subscriptions: Subscription = new Subscription();
-
 	constructor(
 		private _host: ElementRef<Element>,
 		private _cd: ChangeDetectorRef,
@@ -126,6 +92,57 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	) {
 		this._subscriptions.add(this._acService.blured.subscribe(this._blur));
 	}
+	@ViewChild('acInput', { static: true }) public inputControl: ElementRef<HTMLInputElement>;
+	@ViewChild(NvmChipsComponent, { static: true }) public chipsControl: NvmChipsComponent;
+	@ViewChild(NvmSuggestionsComponent, { static: true }) public suggestionsControl: NvmSuggestionsComponent;
+	@ContentChild(NvmChipContent, { static: false }) public chipTemplateOutlet: NvmChipContent;
+	@ContentChild(NvmSuggestionContent, { static: false }) public suggestionTemplateOutlet: NvmSuggestionContent;
+	@ContentChild(NvmDdButton, { static: false }) public ddTemplateOutlet: NvmDdButton;
+
+	@Input() public multiple: boolean = true;
+	@Input() public customSuggestions: NvmAutocompleteItem[] = [];
+	@Input() public dropdown: boolean = false;
+	@Input() public allowDelete: boolean = true;
+	@Input() public allowSearch: boolean = true;
+
+	@Input() public placeholder: string;
+
+	@Output() public complete: EventEmitter<{ query: string, originalEvent: KeyboardEvent }> = new EventEmitter<{ query: string, originalEvent: KeyboardEvent }>();
+	@Output() public ddClicked: EventEmitter<{ query: string, originalEvent: MouseEvent }> = new EventEmitter<{ query: string, originalEvent: MouseEvent }>();
+	@Output() public input: EventEmitter<KeyboardEvent> = new EventEmitter<KeyboardEvent>();
+	@Output() public suggestionsChange: EventEmitter<NvmAutocompleteItem[]> = new EventEmitter<NvmAutocompleteItem[]>();
+	@Output() public selected: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
+	@Output() public customSelected: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
+	@Output() public deleted: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
+	@Output() public focus: EventEmitter<Event> = new EventEmitter<Event>();
+	@Output() public blur: EventEmitter<Event> = new EventEmitter<Event>();
+
+	public suggestionsCollection: NvmAutocompleteItem[] = [];
+	public disabled: boolean = false;
+	public isInFocus: boolean = false;
+
+	public innerModel: NvmAutocompleteItem[];
+
+	private _suggestions: NvmAutocompleteItem[] = [];
+	private _subscriptions: Subscription = new Subscription();
+
+	private _onComplete = debounce((ev: KeyboardEvent): void => {
+		if (isEmpty(this.inputControl.nativeElement.value)) {
+			return;
+		}
+		this.complete.emit({
+			query: this.inputControl.nativeElement.value,
+			originalEvent: ev
+		});
+	}, 300);
+
+	private _detectChanges = debounce((): void => {
+		if ((this._cd as ViewRef).destroyed) {
+			return;
+		}
+		this._cd.detectChanges();
+	}, 100);
+	@Input() public mapToValue: (item: NvmAutocompleteItem) => Observable<NvmAutocompleteItem> = (item: NvmAutocompleteItem) => of(item);
 
 	public ngOnInit(): void {
 	}
@@ -209,20 +226,20 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	}
 
 	public keyPress = (ev: KeyboardEvent): void => {
-		switch (ev.keyCode) {
-			case 37: { // left
+		switch (ev.key) {
+			case 'ArrowLeft': {
 				if (this.inputControl.nativeElement.selectionStart === this.inputControl.nativeElement.selectionEnd && this.inputControl.nativeElement.selectionEnd === 0) {
 					this.chipsControl.selectLeft();
 				}
 				break;
 			}
-			case 39: { // right
+			case 'ArrowRight': {
 				if (isEmpty(this.inputControl.nativeElement.value)) {
 					this.chipsControl.selectRight();
 				}
 				break;
 			}
-			case 38: { // up
+			case 'ArrowUp': {
 				if (isEmpty(this.inputControl.nativeElement.value) && !this.dropdown) {
 					return;
 				}
@@ -232,7 +249,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 				this.suggestionsControl.hoverTop();
 				break;
 			}
-			case 40: { // down
+			case 'ArrowDown': {
 				if (isEmpty(this.inputControl.nativeElement.value) && !this.dropdown) {
 					return;
 				}
@@ -242,17 +259,17 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 				this.suggestionsControl.hoverBottom();
 				break;
 			}
-			case 8: { // backspace
+			case 'Backspace': {
 				if (this.inputControl.nativeElement.selectionStart === this.inputControl.nativeElement.selectionEnd && this.inputControl.nativeElement.selectionEnd === 0) {
 					this.chipsControl.deleteLeft();
 				}
 				break;
 			}
-			case 46: { // delete
+			case 'Delete': {
 				this.chipsControl.deleteRight();
 				break;
 			}
-			case 13: { // enter
+			case 'Enter': {
 				this.suggestionsControl.select();
 				break;
 			}
@@ -317,21 +334,11 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 		this.focused(ev);
 	}
 
-	private _onComplete = debounce((ev: KeyboardEvent): void => {
-		if (isEmpty(this.inputControl.nativeElement.value)) {
-			return;
-		}
-		this.complete.emit({
-			query: this.inputControl.nativeElement.value,
-			originalEvent: ev
-		});
-	}, 300);
-
 	private _blur = (ev: Event): void => {
 		if (ev.target !== window && this._host.nativeElement.contains(ev.target as Element) && ev.type.toUpperCase() !== 'KEYDOWN') {
 			return;
 		}
-		this.blured(new FocusEvent('blur', ev))
+		this.blured(new FocusEvent('blur', ev));
 	}
 
 	private _showSuggestions = () => {
@@ -339,11 +346,4 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 			this.suggestionsControl.overlay.show();
 		}
 	}
-
-	private _detectChanges = debounce((): void => {
-		if ((this._cd as ViewRef).destroyed) {
-			return;
-		}
-		this._cd.detectChanges();
-	}, 100)
 }

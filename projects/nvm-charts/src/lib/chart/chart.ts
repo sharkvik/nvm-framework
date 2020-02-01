@@ -1,4 +1,4 @@
-import { ChartType } from "./chart-type";
+import { ChartType } from './chart-type';
 
 export class Chart {
 	public id: string;

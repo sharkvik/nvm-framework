@@ -5,7 +5,8 @@
 			true,
 			"attribute",
 			"",
-			"camelCase"
+			"camelCase",
+			"kebab-case"
 		],
 		"component-selector": [
 			true,

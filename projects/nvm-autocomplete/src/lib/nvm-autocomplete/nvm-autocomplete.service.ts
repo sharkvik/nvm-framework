@@ -5,17 +5,17 @@ import { Subject } from 'rxjs';
 	providedIn: 'root'
 })
 export class NvmAutocompleteService {
-	public blured: Subject<Event> = new Subject<Event>()
+	public blured: Subject<Event> = new Subject<Event>();
 	constructor(private _zone: NgZone) {
 		this._zone.runOutsideAngular(() => {
 			document.addEventListener('click', this._blur, true);
-			window.addEventListener('blur', this._blur, true)
+			window.addEventListener('blur', this._blur, true);
 			document.addEventListener('keydown', (e: KeyboardEvent) => {
-				if (e.keyCode !== 9) {
+				if (e.key !== 'Tab') {
 					return;
 				}
 				this._blur(e);
-			}, true)
+			}, true);
 		});
 	}
 

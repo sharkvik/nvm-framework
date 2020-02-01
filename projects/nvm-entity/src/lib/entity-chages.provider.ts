@@ -64,14 +64,14 @@ export class EntityChagesProvider {
 		}
 		const subscriptionIds = this._keys.get(entityId);
 		subscriptionIds.forEach((s) => this._notify(s, changes));
-	};
+	}
 
 	private _unsubscribe = (s: Subscription): void => {
 		if (isNil(s) || s.closed) {
 			return;
 		}
 		s.unsubscribe();
-	};
+	}
 
 	private _fromMapUnsubscribe = (val: Subscription, key: string): void => this.unsubscribe(key);
 

@@ -1,4 +1,17 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, forwardRef, ContentChild, ChangeDetectorRef, ViewRef, Output, EventEmitter, Input, Attribute } from '@angular/core';
+import {
+	Component,
+	OnInit,
+	ViewEncapsulation,
+	ChangeDetectionStrategy,
+	forwardRef,
+	ContentChild,
+	ChangeDetectorRef,
+	ViewRef,
+	Output,
+	EventEmitter,
+	Input,
+	Attribute
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NvmAutocompleteItem } from '../models/nvm-autocomplete-item';
 import { NvmAutocompleteElement } from '../directives/nvm-autocomplete-element.directive';
@@ -6,6 +19,7 @@ import { isNil, debounce } from 'lodash';
 
 export const NVM_CHiPS_ACCESSOR = {
 	provide: NG_VALUE_ACCESSOR,
+	// tslint:disable-next-line: no-use-before-declare
 	useExisting: forwardRef(() => NvmChipsComponent),
 	multi: true
 };
@@ -19,7 +33,9 @@ export const NVM_CHiPS_ACCESSOR = {
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NvmChipsComponent implements ControlValueAccessor, OnInit {
-	@Output() public selected: EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }> = new EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }>();
+	constructor(private _cd: ChangeDetectorRef) { }
+	@Output() public selected: EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }>
+		= new EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }>();
 	@Output() public deleted: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
 	@Output() public itemRemovedLeft: EventEmitter<string> = new EventEmitter<string>();
 
@@ -34,7 +50,13 @@ export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 	@ContentChild(NvmAutocompleteElement, { static: false }) public templateOutlet: NvmAutocompleteElement;
 
 	private _selectedItem: NvmAutocompleteItem;
-	constructor(private _cd: ChangeDetectorRef) { }
+
+	private _detectChanges = debounce((): void => {
+		if ((this._cd as ViewRef).destroyed) {
+			return;
+		}
+		this._cd.detectChanges();
+	}, 100);
 
 	public ngOnInit() {
 	}
@@ -152,11 +174,4 @@ export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 		this.disabled = isDisabled;
 		this._detectChanges();
 	}
-
-	private _detectChanges = debounce((): void => {
-		if ((this._cd as ViewRef).destroyed) {
-			return;
-		}
-		this._cd.detectChanges();
-	}, 100)
 }

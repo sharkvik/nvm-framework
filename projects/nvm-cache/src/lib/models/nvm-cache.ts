@@ -8,7 +8,7 @@ export class NvmCache<T> {
 	constructor(
 		private _action: (id: string) => Observable<T>,
 		private _ignoreCase: boolean = true
-	) {}
+	) { }
 
 	public get = (id: string): NvmSubject<T> => this._get(this._prepareKey(id));
 	public getOnce = (id: string): Observable<T> => this._get(this._prepareKey(id)).getOnce();
@@ -18,7 +18,7 @@ export class NvmCache<T> {
 		return !isNil(data)
 			? new Observable(s => this._onUpdate(s, id, data))
 			: new Observable(s => this._onRefresh(s, id));
-	};
+	}
 
 	public remove = (id: string): void => {
 		id = this._prepareKey(id);
@@ -27,7 +27,7 @@ export class NvmCache<T> {
 		}
 		this._cache.get(id).complete();
 		this._cache.delete(id);
-	};
+	}
 
 	public get keys(): string[] {
 		const keys = [];
@@ -44,14 +44,14 @@ export class NvmCache<T> {
 		if (!this._cache.has(id)) {
 			this._cacheItem(id, data)
 				.getOnce()
-				.subscribe((data: T) => this._emit(s, data));
+				.subscribe((d: T) => this._emit(s, d));
 			return;
 		}
 		this._cache
 			.get(id)
 			.update(data)
 			.subscribe(() => this._emit(s, data));
-	};
+	}
 
 	private _onRefresh = (s: Subscriber<T>, id: string) => {
 		if (!this._cache.has(id)) {
@@ -64,12 +64,12 @@ export class NvmCache<T> {
 			.get(id)
 			.refresh()
 			.subscribe((data: T) => this._emit(s, data));
-	};
+	}
 
 	private _emit = (s: Subscriber<T>, data?: T): void => {
 		s.next(data);
 		s.complete();
-	};
+	}
 
 	private _cacheItem(id: string, itemData?: T): NvmSubject<T> {
 		const item = new NvmSubject<T>(() => this._action(id));

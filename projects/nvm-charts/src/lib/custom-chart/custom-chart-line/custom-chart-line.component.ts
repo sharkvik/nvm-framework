@@ -8,7 +8,7 @@ import { Chart } from './../../chart/chart';
 	encapsulation: ViewEncapsulation.None
 })
 export class CustomChartLineComponent implements OnInit {
-	@Input() public chart: Chart
+	@Input() public chart: Chart;
 	@Input() public xAxe: number;
 
 	public data: number[];
@@ -24,7 +24,7 @@ export class CustomChartLineComponent implements OnInit {
 			const lineResult = ch.data.reduce((r: number, x: number) => r + x, 0);
 			return result > lineResult ? result : lineResult;
 		}, 0) + 10;
-		this.maxValue = this.maxValue
+		this.maxValue = this.maxValue;
 
 		this.data = this.chart.charts.map(x => x.data[this.xAxe]);
 		const pixelPerValue = this.maxPixelValue / this.maxValue;

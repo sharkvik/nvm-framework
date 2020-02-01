@@ -33,7 +33,7 @@ export class EntityEventHandler<T> {
 
 	private _notifyAll = (changes: EntityChanges<T>): void => {
 		this._entityEventEmiter.next(changes);
-		changes.changes.forEach(this._notify)
+		changes.changes.forEach(this._notify);
 	}
 
 	private _notify = (changing: FieldChanges): void => {

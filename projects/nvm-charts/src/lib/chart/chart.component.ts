@@ -67,7 +67,7 @@ export class ChartComponent implements OnInit {
 					: this.percents > 33 && this.percents <= 66
 						? 'yellow'
 						: 'green';
-				this.charts[0].backgroundColor[1] = 'rgba(0,0,0,0.1)'
+				this.charts[0].backgroundColor[1] = 'rgba(0,0,0,0.1)';
 				this.options.circumference = Math.PI * 6 / 4;
 				this.options.rotation = -Math.PI - Math.PI / 4;
 			}

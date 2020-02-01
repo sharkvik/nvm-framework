@@ -5,5 +5,5 @@ import { NvmAutocompleteItem } from '../models/nvm-autocomplete-item';
 	selector: '[nvm-autocomplete-element]'
 })
 export class NvmAutocompleteElement {
-	constructor(@Optional() public readonly templateRef: TemplateRef<{$implicit: NvmAutocompleteItem}>) { }
+	constructor(@Optional() public readonly templateRef: TemplateRef<{ $implicit: NvmAutocompleteItem }>) { }
 }

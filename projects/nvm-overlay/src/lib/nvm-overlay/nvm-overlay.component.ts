@@ -25,7 +25,7 @@ import { NvmOverlayService } from '../nvm-overlay.service';
 	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	animations: [
-		trigger("fade", [
+		trigger('fade', [
 			state('hidden', style({opacity: '0.0'})),
 			state('visible', style({opacity: '1.0'})),
 			transition('hidden <=> visible', [animate('0.5s', keyframes([

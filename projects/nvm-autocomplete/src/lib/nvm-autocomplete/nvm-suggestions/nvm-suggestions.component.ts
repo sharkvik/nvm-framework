@@ -1,4 +1,18 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, forwardRef, ChangeDetectorRef, ViewRef, Input, ElementRef, ContentChild, ViewChild, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import {
+	Component,
+	OnInit,
+	ViewEncapsulation,
+	ChangeDetectionStrategy,
+	forwardRef,
+	ChangeDetectorRef,
+	ViewRef,
+	Input,
+	ElementRef,
+	ContentChild,
+	ViewChild,
+	Output,
+	EventEmitter
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { NvmAutocompleteItem } from '../models/nvm-autocomplete-item';
 import { debounce, isNil } from 'lodash';
@@ -20,7 +34,10 @@ export const NVM_SUGGESTIONS_ACCESSOR = {
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
-	@Output() public selected: EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }> = new EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }>();
+
+	constructor(private _cd: ChangeDetectorRef) { }
+	@Output() public selected: EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }>
+		= new EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }>();
 
 	@Input() public appendTo: ElementRef<HTMLElement> | HTMLElement | string;
 	@Input() public anchor: ElementRef<HTMLElement> | HTMLElement;
@@ -29,13 +46,13 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 	@Input() public adjustHeight: boolean = true;
 
 	public disabled: boolean = false;
-	public model: Set<NvmAutocompleteItem>
+	public model: Set<NvmAutocompleteItem>;
 	@ContentChild(NvmAutocompleteElement, { static: false }) public templateOutlet: NvmAutocompleteElement;
 	@ViewChild('overlay', { static: false }) public overlay: NvmOverlayComponent;
 
 	private _hoverred: NvmAutocompleteItem;
 
-	constructor(private _cd: ChangeDetectorRef) { }
+	private _detectChangesDebounced = debounce(() => this._detectChanges(), 100);
 
 	public ngOnInit() {
 
@@ -124,12 +141,10 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 		this._hoverred = undefined;
 	}
 
-	private _detectChanges = (): void => {
+	private _detectChanges(): void {
 		if ((this._cd as ViewRef).destroyed) {
 			return;
 		}
 		this._cd.detectChanges();
 	}
-
-	private _detectChangesDebounced = debounce(this._detectChanges, 100);
 }

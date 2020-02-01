@@ -4,11 +4,11 @@ import { InitialComponent } from './initial.component';
 import { InitialRoutingModule } from './initial-routing.module';
 
 @NgModule({
-  imports: [
-	CommonModule,
-	InitialRoutingModule
-  ],
-  declarations: [InitialComponent],
-  entryComponents: [InitialComponent]
+	imports: [
+		CommonModule,
+		InitialRoutingModule
+	],
+	declarations: [InitialComponent],
+	entryComponents: [InitialComponent]
 })
 export class InitialModule { }

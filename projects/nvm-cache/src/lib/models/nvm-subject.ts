@@ -16,7 +16,7 @@ export class NvmSubject<T> extends ReplaySubject<T> {
 
 	public refresh(): Observable<T> {
 		if (this._skipRefresh()) {
-			return of(this._lastValue)
+			return of(this._lastValue);
 		}
 		const subj = new Subject<T>();
 		this._tempSubjects.push(subj);
@@ -54,12 +54,12 @@ export class NvmSubject<T> extends ReplaySubject<T> {
 				this._emitTempSubject();
 				console.error(err);
 			});
-	};
+	}
 
 	private _emit = (s: Subscriber<T>, data?: T): void => {
 		s.next(data || this._lastValue);
 		s.complete();
-	};
+	}
 
 	private _emitTempSubject(): void {
 		this._tempSubjects.forEach(s => {
@@ -73,6 +73,6 @@ export class NvmSubject<T> extends ReplaySubject<T> {
 	private _skipRefresh = (): boolean => {
 		return !isNil(this._lastValue)
 			&& !isNil(this._lastRefresh)
-			&& this._lastRefresh >= new Date().getTime() - 300
+			&& this._lastRefresh >= new Date().getTime() - 300;
 	}
 }

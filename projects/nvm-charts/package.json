@@ -16,5 +16,8 @@
 		"@angular/core": "^6.0.0-rc.0 || ^6.0.0 || ^8.2.14",
 		"@types/chart.js": "^2.9.5",
 		"lodash": "^4.0.0"
+	},
+	"devDependencies": {
+		"@types/chart.js": "^2.9.11"
 	}
 }

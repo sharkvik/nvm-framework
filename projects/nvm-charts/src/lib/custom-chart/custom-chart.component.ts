@@ -20,7 +20,7 @@ export class CustomChartComponent implements OnInit {
 		this.legend = _.uniqBy(this.charts.map(x => x.charts.map(y => ({
 			label: y.label,
 			color: y.backgroundColor
-		}))).reduce((r, c) => [...r,...c], []), (x) => x.label + x.color);
+		}))).reduce((r, c) => [...r, ...c], []), (x) => x.label + x.color);
 	}
 
 }
