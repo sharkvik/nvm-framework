@@ -19,8 +19,6 @@
 		"@angular/platform-browser": "~8.2.14",
 		"@angular/platform-browser-dynamic": "~8.2.14",
 		"@angular/router": "~8.2.14",
-		"@types/chart.js": "^2.9.11",
-		"@types/lodash": "^4.14.149",
 		"chart.js": "^2.9.3",
 		"lodash": "^4.17.15",
 		"quagga": "^0.12.1",
@@ -30,13 +28,16 @@
 		"zone.js": "~0.9.1"
 	},
 	"devDependencies": {
-		"@angular-devkit/build-angular": "~0.803.21",
+		"@angular-devkit/build-angular": "^0.803.21",
+		"@angular-devkit/build-ng-packagr": "^0.803.21",
 		"@angular/cli": "~8.3.21",
 		"@angular/compiler-cli": "~8.2.14",
 		"@angular/language-service": "~8.2.14",
 		"@types/node": "~8.9.4",
 		"@types/jasmine": "~3.3.8",
 		"@types/jasminewd2": "~2.0.3",
+		"@types/chart.js": "^2.9.11",
+		"@types/lodash": "^4.14.149",
 		"codelyzer": "^5.0.0",
 		"jasmine-core": "~3.4.0",
 		"jasmine-spec-reporter": "~4.2.1",
@@ -48,6 +49,8 @@
 		"protractor": "~5.4.0",
 		"ts-node": "~7.0.0",
 		"tslint": "~5.15.0",
-		"typescript": "~3.5.3"
+		"typescript": "~3.5.3",
+		"ng-packagr": "^5.7.1",
+		"tsickle": "^0.34.1"
 	}
 }

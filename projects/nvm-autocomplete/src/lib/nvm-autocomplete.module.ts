@@ -10,7 +10,7 @@ import { NvmChipContent } from './nvm-autocomplete/directives/nvm-chip-content.d
 import { NvmSuggestionContent } from './nvm-autocomplete/directives/nvm-suggestion-content.directive';
 import { NvmDdButtonOutlet } from './nvm-autocomplete/directives/nvm-dd-button-outlet.directive';
 import { NvmDdButton } from './nvm-autocomplete/directives/nvm-dd-button.directive';
-import { NvmOverlayModule } from 'projects/nvm-overlay/src/public-api';
+import { NvmOverlayModule } from 'nvm-overlay/public-api';
 
 
 @NgModule({
