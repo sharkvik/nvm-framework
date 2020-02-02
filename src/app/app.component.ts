@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { EntityEventHandlerProvider, IEntity, EntityChagesProvider, FieldChanges } from '@nvm/nvm-entity';
-import { interval, Observable } from 'rxjs';
-import { takeWhile } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { NvmCache } from '@nvm/nvm-cache';
 import { isNil } from 'lodash';
 import * as _ from 'lodash';
@@ -66,18 +65,6 @@ export class AppComponent implements OnInit {
 		const test = this._setings.get<string>('test');
 		console.log(test);
 		this._initEventHandlers();
-		interval(5000)
-			.pipe(takeWhile(val => val <= 5))
-			.subscribe((val) => {
-				this._model.name = 'b' + val;
-				this._model.refresh(this._model);
-			});
-		interval(3000)
-			.pipe(takeWhile(val => val <= 5))
-			.subscribe((val) => {
-				this._model.type = 'c' + val;
-				this._model.refresh(this._model);
-			});
 	}
 
 	public ngOnInit(): void {

@@ -1,12 +1,22 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule } from './app-routing.module';
+import { NvmSettingsModule } from '@nvm/nvm-settings';
+import { useAppConfigProvider } from './app.module';
 
 describe('AppComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				RouterTestingModule
+				RouterTestingModule,
+				BrowserAnimationsModule,
+				AppRoutingModule,
+				NvmSettingsModule.forRoot()
+			],
+			providers: [
+				useAppConfigProvider
 			],
 			declarations: [
 				AppComponent
@@ -20,16 +30,9 @@ describe('AppComponent', () => {
 		expect(app).toBeTruthy();
 	});
 
-	it(`should have as title 'nvm-framework'`, () => {
+	it(`should have as title 'nvm'`, () => {
 		const fixture = TestBed.createComponent(AppComponent);
 		const app = fixture.debugElement.componentInstance;
-		expect(app.title).toEqual('nvm-framework');
-	});
-
-	it('should render title', () => {
-		const fixture = TestBed.createComponent(AppComponent);
-		fixture.detectChanges();
-		const compiled = fixture.debugElement.nativeElement;
-		expect(compiled.querySelector('.content span').textContent).toContain('nvm-framework app is running!');
+		expect(app.title).toEqual('nvm');
 	});
 });
