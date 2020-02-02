@@ -9,8 +9,8 @@ nvm-chips {
 		&__item {
 			display: flex;
 			flex-flow: row nowrap;
-			background-color: rgba(128, 215, 255, 0.3);
-			border: 1px solid rgba(0, 100, 255, 0.3);
+			background-color: rgba(102, 206, 255, 0.15);
+			border: 1px solid rgba(102, 206, 255, 0.3);
 			border-radius: 4px;
 			margin: 2px;
 			padding: 2px 4px;
@@ -21,8 +21,8 @@ nvm-chips {
 			cursor: pointer;
 			&--selected {
 				background-color: darken(
-					$color: rgba(0, 139, 204, 0.4),
-					$amount: 10%
+					$color: rgba(102, 206, 255, 0.15),
+					$amount: 30%
 				);
 			}
 			&--disabled {

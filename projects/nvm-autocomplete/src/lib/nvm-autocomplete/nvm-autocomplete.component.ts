@@ -142,6 +142,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 		}
 		this._cd.detectChanges();
 	}, 100);
+
 	@Input() public mapToValue: (item: NvmAutocompleteItem) => Observable<NvmAutocompleteItem> = (item: NvmAutocompleteItem) => of(item);
 
 	public ngOnInit(): void {
@@ -183,6 +184,12 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 		}
 	}
 
+	public onChipMouseDown = (ev: MouseEvent) => {
+		if (this.dropdown && !this.multiple) {
+			this.focused(ev);
+		}
+	}
+
 	public onItemDeleted = (item: NvmAutocompleteItem): void => {
 		this.deleted.emit(item);
 		this.onModelChange(this.model);
@@ -220,7 +227,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 
 	public dropDownClicked = (ev?: MouseEvent): void => {
 		this._onDDClick(ev);
-		if (this.valueIsEmpty) {
+		if (this.valueIsEmpty && this.isInFocus) {
 			setTimeout(this._showSuggestions);
 		}
 	}
@@ -328,6 +335,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 
 	private _onDDClick = (ev: MouseEvent): void => {
 		if (this.suggestionsControl.overlay.isVisible) {
+			this.blured(new FocusEvent('blur', ev));
 			setTimeout(() => this.suggestionsControl.overlay.hide());
 			return;
 		}

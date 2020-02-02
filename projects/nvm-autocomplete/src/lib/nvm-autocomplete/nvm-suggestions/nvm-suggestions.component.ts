@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { NvmAutocompleteItem } from '../models/nvm-autocomplete-item';
-import { debounce, isNil } from 'lodash';
+import { debounce, isNil, cloneDeep } from 'lodash';
 import { NvmAutocompleteElement } from '../directives/nvm-autocomplete-element.directive';
 import { NvmOverlayComponent } from 'projects/nvm-overlay/src/public-api';
 
@@ -76,6 +76,7 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 	public writeValue(value: NvmAutocompleteItem[]): void {
 		this.model = new Set<NvmAutocompleteItem>(value || []);
 		if (!isNil(this.overlay)) {
+			this._detectChanges(); // необходимо до открытия оверлэя пропихнуть элементы внутрь иначе оверлэй не будет иметь размер.
 			if (this.model.size > 0) {
 				this.overlay.show();
 				this.hoverBottom();

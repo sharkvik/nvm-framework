@@ -8,14 +8,12 @@ import {
 	OnDestroy,
 	ChangeDetectorRef,
 	ViewRef,
-	HostBinding,
 	Output,
 	EventEmitter
 } from '@angular/core';
 import { isNil } from 'lodash';
 import { Subscription, Subject, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { trigger, state, style, animate, transition, keyframes } from '@angular/animations';
 import { NvmOverlayService } from '../nvm-overlay.service';
 
 @Component({
@@ -23,19 +21,7 @@ import { NvmOverlayService } from '../nvm-overlay.service';
 	templateUrl: './nvm-overlay.component.html',
 	styleUrls: ['./nvm-overlay.component.scss'],
 	encapsulation: ViewEncapsulation.None,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	animations: [
-		trigger('fade', [
-			state('hidden', style({opacity: '0.0'})),
-			state('visible', style({opacity: '1.0'})),
-			transition('hidden <=> visible', [animate('0.5s', keyframes([
-				style({ opacity: '0.1', offset: 0.1 }),
-				style({ opacity: '0.2', offset: 0.2 }),
-				style({ opacity: '0.3', offset: 0.3 }),
-				style({ opacity: '0.5', offset: 0.4 })
-			]))])
-		])
-	]
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NvmOverlayComponent implements OnInit, OnDestroy {
 	@Output() public openned: EventEmitter<any> = new EventEmitter<any>();
@@ -63,8 +49,6 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 
 	public id: string;
 	public position: string = 'bottom';
-	@HostBinding('@fade')
-	public apear: string = 'hidden';
 
 	private _appendTo: HTMLElement;
 	private _anchor: HTMLElement;
@@ -93,6 +77,7 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 		this._host.nativeElement.remove();
 		this._subscriptions.add(this._show.pipe(switchMap(() => {
 			this._displayImpl();
+			this._detectChanges();
 			return of(true);
 		})).subscribe(() => {
 			this._adjust();
@@ -114,13 +99,10 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 
 	public show = (): void => {
 		this._display = true;
-		this.apear = 'visible';
-		this._fillPosition();
 		this._show.next();
 	}
 
 	public hide = (): void => {
-		this.apear = 'hidden';
 		this._display = false;
 		this._host.nativeElement.remove();
 		this._detectChanges();
@@ -154,6 +136,7 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 		}
 		if (isNil(this.container)) {
 			this._top = anchorRectangle.bottom;
+			this._bottom = undefined;
 			return;
 		}
 		this._containerRect = this._container.getBoundingClientRect();
@@ -165,21 +148,25 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 		}
 		if (bottomDifference > 5) {
 			this._top = anchorRectangle.bottom + window.scrollY;
+			this._bottom = undefined;
 			return;
 		}
 		if (topDifference > 5) {
 			this.position = 'top';
 			this._bottom = window.innerHeight - anchorRectangle.top - window.scrollY;
+			this._top = undefined;
 			return;
 		}
 		if (!this.adjustHeight) {
 			this._top = anchorRectangle.bottom + window.scrollY;
+			this._bottom = undefined;
 			return;
 		}
 		if (topDifference > bottomDifference) {
 			this.position = 'top';
 			this._bottom = window.innerHeight - anchorRectangle.top - window.scrollY;
 			this._maxHeight = anchorRectangle.top - this._containerRect.top;
+			this._top = undefined;
 		} else {
 			this._top = anchorRectangle.bottom + window.scrollY;
 			this._maxHeight = this._containerRect.bottom - anchorRectangle.bottom;
@@ -216,7 +203,7 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 			if (this._initialStyles.top === '-9999px') {
 				this._initialStyles.top = '';
 			}
-			this._host.nativeElement.style.top = this._initialStyles.top;
+			this._host.nativeElement.style.top = '';
 		}
 		if (!isNil(this._left) && this._left !== -9999) {
 			this._host.nativeElement.style.left = `${this._left}px`;

@@ -6,8 +6,7 @@
 	[ngClass]="{'nvm-autocomplete__input--empty': valueIsEmpty}"
 	(itemRemovedLeft)="onItemLeftRemoved($event)"
 	(deleted)="onItemDeleted($event)"
-	(mousedown)="focused($event)"
-	(selected)="focused()">
+	(mousedown)="onChipMouseDown($event)">
 	<div class="nvm-chip__content" *nvm-autocomplete-element="let item">
 		<span *ngIf="!chipTemplateOutlet">{{item.label}}</span>
 		<nvm-autocomplete-item-outlet *ngIf="chipTemplateOutlet" [template]="chipTemplateOutlet.templateRef"
