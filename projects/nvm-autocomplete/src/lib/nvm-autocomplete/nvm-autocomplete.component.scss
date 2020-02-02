@@ -40,7 +40,12 @@ nvm-autocomplete {
 			&--empty {
 				.nvm-chips__external-content {
 					width: 10px;
+					min-width: 10px;
 				}
+			}
+			&--single-row .nvm-chips{
+				flex-flow: row nowrap;
+				max-height: 32px;
 			}
 		}
 		&__placeholder {

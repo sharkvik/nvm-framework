@@ -3,10 +3,14 @@
 	[(ngModel)]="innerModel"
 	[allowDelete]="allowDelete"
 	[allowSearch]="allowSearch"
-	[ngClass]="{'nvm-autocomplete__input--empty': valueIsEmpty}"
+	[ngClass]="{
+		'nvm-autocomplete__input--empty': valueIsEmpty,
+		'nvm-autocomplete__input--single-row': singleRow || !multiple
+	}"
 	(itemRemovedLeft)="onItemLeftRemoved($event)"
 	(deleted)="onItemDeleted($event)"
-	(mousedown)="onChipMouseDown($event)">
+	(mousedown)="onChipMouseDown($event)"
+	(selected)="onChipSelected($event)">
 	<div class="nvm-chip__content" *nvm-autocomplete-element="let item">
 		<span *ngIf="!chipTemplateOutlet">{{item.label}}</span>
 		<nvm-autocomplete-item-outlet *ngIf="chipTemplateOutlet" [template]="chipTemplateOutlet.templateRef"
@@ -16,8 +20,7 @@
 	<input #acInput
 		class="nvm-autocomplete__input"
 		type="text"
-		(input)="onInput($event)"
-		(keydown)="keyPress($event)" />
+		(input)="onInput($event)" />
 </nvm-chips>
 <ng-container *ngIf="dropdown">
 	<button *ngIf="!ddTemplateOutlet" (click)="dropDownClicked($event)">˅</button>

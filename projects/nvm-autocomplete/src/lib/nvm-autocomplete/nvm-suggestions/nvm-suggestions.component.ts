@@ -69,12 +69,16 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 		item.selected = true;
 		this._hoverred = item;
 		this._detectChanges();
-		const scrollTo = this.overlay.nativeElement.querySelector('.nvm-suggestions__item--hover').getBoundingClientRect().top
+		const hverred = this.overlay.nativeElement.querySelector('.nvm-suggestions__item--hover');
+		if (isNil(hverred)) {
+			return;
+		}
+		const scrollTo = hverred.getBoundingClientRect().top
 			- this.overlay.nativeElement.getBoundingClientRect().bottom
-			+ this.overlay.nativeElement.querySelector('.nvm-suggestions__item--hover').clientHeight - 1
+			+ hverred.clientHeight - 1
 			+ this.overlay.nativeElement.scrollTop;
 
-		this.overlay.nativeElement.scrollTo(0, scrollTo);
+		this.overlay.nativeElement.scrollTo(0, Math.max(scrollTo, 0));
 	}
 
 	public writeValue(value: NvmAutocompleteItem[]): void {

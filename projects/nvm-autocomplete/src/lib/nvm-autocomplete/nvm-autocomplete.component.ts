@@ -42,7 +42,6 @@ export const NVM_AUTOCOMPLETE_ACCESSOR = {
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, OnChanges, OnDestroy {
-
 	@Input() public set suggestions(val: NvmAutocompleteItem[]) {
 		this._suggestions = val;
 		this.suggestionsCollection = [...this._suggestions, ...this.customSuggestions];
@@ -85,13 +84,6 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 		}
 	}
 
-	constructor(
-		private _host: ElementRef<Element>,
-		private _cd: ChangeDetectorRef,
-		private _acService: NvmAutocompleteService
-	) {
-		this._subscriptions.add(this._acService.blured.subscribe(this._blur));
-	}
 	@ViewChild('acInput', { static: true }) public inputControl: ElementRef<HTMLInputElement>;
 	@ViewChild(NvmChipsComponent, { static: true }) public chipsControl: NvmChipsComponent;
 	@ViewChild(NvmSuggestionsComponent, { static: true }) public suggestionsControl: NvmSuggestionsComponent;
@@ -104,7 +96,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	@Input() public dropdown: boolean = false;
 	@Input() public allowDelete: boolean = true;
 	@Input() public allowSearch: boolean = true;
-
+	@Input() public singleRow: boolean = false;
 	@Input() public placeholder: string;
 
 	@Output() public complete: EventEmitter<{ query: string, originalEvent: KeyboardEvent }> = new EventEmitter<{ query: string, originalEvent: KeyboardEvent }>();
@@ -125,6 +117,15 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 
 	private _suggestions: NvmAutocompleteItem[] = [];
 	private _subscriptions: Subscription = new Subscription();
+
+	constructor(
+		private _host: ElementRef<Element>,
+		private _cd: ChangeDetectorRef,
+		private _acService: NvmAutocompleteService
+	) {
+		this._subscriptions.add(this._acService.blured.subscribe(this._blur));
+		this._subscriptions.add(this._acService.keyPressed.subscribe(this._globalKeyPressed));
+	}
 
 	private _onComplete = debounce((ev: KeyboardEvent): void => {
 		if (isEmpty(this.inputControl.nativeElement.value)) {
@@ -184,10 +185,19 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 		}
 	}
 
-	public onChipMouseDown = (ev: MouseEvent) => {
-		if (this.dropdown && !this.multiple) {
+	public onChipMouseDown = (ev: MouseEvent): void => {
+		if (this.dropdown && !this.multiple || (ev.target as Element).tagName === 'INPUT') {
 			this.focused(ev);
+		} else {
+			this.inputControl.nativeElement.focus();
 		}
+	}
+
+	public onChipSelected = (ev: { item: NvmAutocompleteItem, originalEvent: MouseEvent }): void => {
+		if (isNil(ev.item)) {
+			this.inputControl.nativeElement.focus();
+		}
+		this.isInFocus = true;
 	}
 
 	public onItemDeleted = (item: NvmAutocompleteItem): void => {
@@ -212,6 +222,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 				if (this.dropdown) {
 					this.inputControl.nativeElement.focus();
 				}
+				this._detectChanges();
 			}, () => this.disabled = false);
 	}
 
@@ -333,6 +344,13 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 		this.inputControl.nativeElement.value = label.substring(0, label.length);
 	}
 
+	private _globalKeyPressed = (ev: KeyboardEvent): void => {
+		if (ev.target === window || !this.isInFocus || ev.type.toUpperCase() !== 'KEYDOWN') {
+			return;
+		}
+		this.keyPress(ev);
+	}
+
 	private _onDDClick = (ev: MouseEvent): void => {
 		if (this.suggestionsControl.overlay.isVisible) {
 			this.blured(new FocusEvent('blur', ev));
@@ -343,9 +361,14 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	}
 
 	private _blur = (ev: Event): void => {
-		if (ev.target !== window && this._host.nativeElement.contains(ev.target as Element) && ev.type.toUpperCase() !== 'KEYDOWN') {
+		if (ev.target !== window && this._host.nativeElement.contains(ev.target as Element)) {
 			return;
 		}
+		if (ev.type.toUpperCase() !== 'KEYDOWN') {
+			this.chipsControl.clearSelection();
+			this.isInFocus = false;
+		}
+		this.chipsControl.clearSelection();
 		this.blured(new FocusEvent('blur', ev));
 	}
 
