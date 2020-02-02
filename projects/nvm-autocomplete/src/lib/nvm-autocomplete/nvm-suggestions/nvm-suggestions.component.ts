@@ -83,7 +83,7 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 
 	public writeValue(value: NvmAutocompleteItem[]): void {
 		this.model = new Set<NvmAutocompleteItem>(value || []);
-		if (!isNil(this.overlay)) {
+		if (!isNil(this.overlay) && !this.overlay.isVisible) {
 			this._detectChanges(); // необходимо до открытия оверлэя пропихнуть элементы внутрь иначе оверлэй не будет иметь размер.
 			if (this.model.size > 0) {
 				this.overlay.show();
@@ -140,6 +140,10 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 		this.selected.emit({ item: item, originalEvent: ev });
 		this._hoverred = undefined;
 		this.overlay.hide();
+	}
+
+	public clearSelection = (): void => {
+		this.onClosed();
 	}
 
 	public onClosed = (): void => {

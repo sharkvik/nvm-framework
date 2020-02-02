@@ -213,7 +213,7 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 		if (!isNil(this._bottom)) {
 			this._host.nativeElement.style.bottom = `${this._bottom}px`;
 		} else {
-			this._host.nativeElement.style.bottom = this._initialStyles.bottom;
+			this._host.nativeElement.style.bottom = '';
 		}
 		if (!isNil(this._right)) {
 			this._host.nativeElement.style.right = `${this._right}px`;

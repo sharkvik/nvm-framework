@@ -144,7 +144,10 @@ export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 		}
 		const item = model[selectedIndex - 1];
 		this.itemRemovedLeft.next(this._selectedItem.label);
-		this.delete(item);
+		this._selectedItem.selected = false;
+		this.delete(this._selectedItem);
+		this._selectedItem = item;
+		this._selectedItem.selected = true;
 	}
 
 	public clearSelection = (): void => {

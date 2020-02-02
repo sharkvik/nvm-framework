@@ -97,6 +97,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	@Input() public allowDelete: boolean = true;
 	@Input() public allowSearch: boolean = true;
 	@Input() public singleRow: boolean = false;
+	@Input() public distinct: boolean = true;
 	@Input() public placeholder: string;
 
 	@Output() public complete: EventEmitter<{ query: string, originalEvent: KeyboardEvent }> = new EventEmitter<{ query: string, originalEvent: KeyboardEvent }>();
@@ -158,7 +159,10 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 			!isNil(changes.customSuggestions) && !changes.customSuggestions.firstChange
 			|| !isNil(changes.suggestions) && !changes.suggestions.firstChange
 		) {
-			const collection = [...this.customSuggestions || [], ...this._suggestions || []];
+			let collection = [...this.customSuggestions || [], ...this._suggestions || []];
+			if (this.distinct) {
+				collection = collection.filter(x => !(this.innerModel || []).some(y => y.value === x.value));
+			}
 			if (isEmpty(collection)) {
 				const el = new NvmAutocompleteItem(null, 'Ничего не найдено', '');
 				el.isCustom = true;
@@ -169,6 +173,9 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 			} else if (collection.some(x => !x.isTemporary)) {
 				this.customSuggestions = this.customSuggestions.filter(x => !x.isTemporary && x.isCustom);
 				this.suggestionsCollection = [...this.customSuggestions, ...this._suggestions || []];
+				if (this.distinct) {
+					this.suggestionsCollection = this.suggestionsCollection.filter(x => !(this.innerModel || []).some(y => y.value === x.value));
+				}
 			}
 		}
 		if (!isNil(changes.customSuggestions) && !changes.customSuggestions.firstChange) {
@@ -178,6 +185,9 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 			}
 			this.customSuggestions.forEach(x => x.isCustom = true);
 			this.suggestionsCollection = [...this._suggestions, ...this.customSuggestions];
+			if (this.distinct) {
+				this.suggestionsCollection = this.suggestionsCollection.filter(x => !(this.innerModel || []).some(y => y.value === x.value));
+			}
 			this._detectChanges();
 		}
 		if (!isNil(changes.placeholder)) {
@@ -202,6 +212,13 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 
 	public onItemDeleted = (item: NvmAutocompleteItem): void => {
 		this.deleted.emit(item);
+		if (this.suggestionsControl.overlay.isVisible && this.distinct) {
+			setTimeout(() => {
+				this.suggestionsCollection = [...this._suggestions, ...this.customSuggestions]
+					.filter(x => !(this.innerModel || []).some(y => y.value === x.value));
+				this._detectChanges();
+			});
+		}
 		this.onModelChange(this.model);
 	}
 
@@ -222,6 +239,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 				if (this.dropdown) {
 					this.inputControl.nativeElement.focus();
 				}
+				this.chipsControl.clearSelection();
 				this._detectChanges();
 			}, () => this.disabled = false);
 	}
@@ -261,30 +279,56 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 				if (isEmpty(this.inputControl.nativeElement.value) && !this.dropdown) {
 					return;
 				}
-				if (!this.suggestionsControl.overlay.isVisible) {
-					this.suggestionsControl.overlay.show();
+				if (!this.suggestionsControl.overlay.isVisible && this.distinct) {
+					this.suggestionsCollection = [...this._suggestions, ...this.customSuggestions]
+						.filter(x => !(this.innerModel || []).some(y => y.value === x.value));
+					this._detectChanges();
+				} else {
+					if (!this.suggestionsControl.overlay.isVisible) {
+						this.suggestionsControl.overlay.show();
+					}
+					this.suggestionsControl.hoverTop();
 				}
-				this.suggestionsControl.hoverTop();
 				break;
 			}
 			case 'ArrowDown': {
 				if (isEmpty(this.inputControl.nativeElement.value) && !this.dropdown) {
 					return;
 				}
-				if (!this.suggestionsControl.overlay.isVisible) {
-					this.suggestionsControl.overlay.show();
+				if (!this.suggestionsControl.overlay.isVisible && this.distinct) {
+					this.suggestionsCollection = [...this._suggestions, ...this.customSuggestions]
+						.filter(x => !(this.innerModel || []).some(y => y.value === x.value));
+					this._detectChanges();
+				} else {
+					if (!this.suggestionsControl.overlay.isVisible) {
+						this.suggestionsControl.overlay.show();
+					}
+					this.suggestionsControl.hoverBottom();
 				}
-				this.suggestionsControl.hoverBottom();
 				break;
 			}
 			case 'Backspace': {
 				if (this.inputControl.nativeElement.selectionStart === this.inputControl.nativeElement.selectionEnd && this.inputControl.nativeElement.selectionEnd === 0) {
 					this.chipsControl.deleteLeft();
+					if (this.suggestionsControl.overlay.isVisible) {
+						this.suggestionsControl.overlay.adjust();
+						setTimeout(() => {
+							this.suggestionsControl.clearSelection();
+							this.suggestionsControl.hoverBottom();
+						}, 200);
+					}
 				}
 				break;
 			}
 			case 'Delete': {
 				this.chipsControl.deleteRight();
+				if (this.suggestionsControl.overlay.isVisible) {
+					this.suggestionsControl.overlay.adjust();
+					setTimeout(() => {
+						this.suggestionsControl.clearSelection();
+						this.suggestionsControl.hoverBottom();
+					}, 200);
+				}
 				break;
 			}
 			case 'Enter': {
