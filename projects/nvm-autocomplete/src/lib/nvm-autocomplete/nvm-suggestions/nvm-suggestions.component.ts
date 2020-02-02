@@ -34,8 +34,6 @@ export const NVM_SUGGESTIONS_ACCESSOR = {
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
-
-	constructor(private _cd: ChangeDetectorRef) { }
 	@Output() public selected: EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }>
 		= new EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }>();
 
@@ -51,9 +49,9 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 	@ViewChild('overlay', { static: false }) public overlay: NvmOverlayComponent;
 
 	private _hoverred: NvmAutocompleteItem;
-
 	private _detectChangesDebounced = debounce(() => this._detectChanges(), 100);
 
+	constructor(private _cd: ChangeDetectorRef) { }
 	public ngOnInit() {
 
 	}
@@ -71,6 +69,12 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 		item.selected = true;
 		this._hoverred = item;
 		this._detectChanges();
+		const scrollTo = this.overlay.nativeElement.querySelector('.nvm-suggestions__item--hover').getBoundingClientRect().top
+			- this.overlay.nativeElement.getBoundingClientRect().bottom
+			+ this.overlay.nativeElement.querySelector('.nvm-suggestions__item--hover').clientHeight - 1
+			+ this.overlay.nativeElement.scrollTop;
+
+		this.overlay.nativeElement.scrollTo(0, scrollTo);
 	}
 
 	public writeValue(value: NvmAutocompleteItem[]): void {
