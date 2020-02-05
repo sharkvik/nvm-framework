@@ -169,13 +169,15 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 				el.isTemporary = true;
 				el.disabled = true;
 				this.customSuggestions = [el];
-				this.suggestionsCollection = [...this.customSuggestions, ...this._suggestions || []];
+				this.suggestionsCollection = [el];
 			} else if (collection.some(x => !x.isTemporary)) {
 				this.customSuggestions = this.customSuggestions.filter(x => !x.isTemporary && x.isCustom);
-				this.suggestionsCollection = [...this.customSuggestions, ...this._suggestions || []];
+				this.suggestionsCollection = [...this._suggestions || [], ...this.customSuggestions];
 				if (this.distinct) {
 					this.suggestionsCollection = this.suggestionsCollection.filter(x => !(this.innerModel || []).some(y => y.value === x.value));
 				}
+			} else {
+				this.suggestionsCollection = collection;
 			}
 		}
 		if (!isNil(changes.customSuggestions) && !changes.customSuggestions.firstChange) {
@@ -188,11 +190,8 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 			if (this.distinct) {
 				this.suggestionsCollection = this.suggestionsCollection.filter(x => !(this.innerModel || []).some(y => y.value === x.value));
 			}
-			this._detectChanges();
 		}
-		if (!isNil(changes.placeholder)) {
-			this._detectChanges();
-		}
+		this._detectChanges();
 	}
 
 	public onChipMouseDown = (ev: MouseEvent): void => {
