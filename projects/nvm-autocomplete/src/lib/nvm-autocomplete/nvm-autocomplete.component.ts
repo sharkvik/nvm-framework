@@ -182,7 +182,9 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 		}
 		if (!isNil(changes.customSuggestions) && !changes.customSuggestions.firstChange) {
 			const csChange = changes.customSuggestions;
-			if (JSON.stringify(csChange.previousValue) === JSON.stringify(csChange.currentValue)) {
+			const prev = csChange.previousValue.map((x: NvmAutocompleteItem) => x.value);
+			const cur = csChange.currentValue.map((x: NvmAutocompleteItem) => x.value);
+			if (JSON.stringify(prev) === JSON.stringify(cur)) {
 				return;
 			}
 			this.customSuggestions.forEach(x => x.isCustom = true);
