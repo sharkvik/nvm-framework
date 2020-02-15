@@ -16,6 +16,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NvmAutocompleteItem } from '../models/nvm-autocomplete-item';
 import { NvmAutocompleteElement } from '../directives/nvm-autocomplete-element.directive';
 import { isNil, debounce } from 'lodash';
+import { NvmChipDelete } from '../directives/nvm-chip-delete.directive';
 
 export const NVM_CHiPS_ACCESSOR = {
 	provide: NG_VALUE_ACCESSOR,
@@ -48,6 +49,7 @@ export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 
 	public model: Set<NvmAutocompleteItem>;
 	@ContentChild(NvmAutocompleteElement, { static: false }) public templateOutlet: NvmAutocompleteElement;
+	@ContentChild(NvmChipDelete, { static: false }) public templateDeleteOutlet: NvmChipDelete;
 
 	private _selectedItem: NvmAutocompleteItem;
 
@@ -70,8 +72,8 @@ export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 			return;
 		}
 		this.model.delete(item);
-		this.deleted.emit(item);
 		this.onModelChange(Array.from(this.model.values()));
+		this.deleted.emit(item);
 		this._detectChanges();
 	}
 

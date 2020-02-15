@@ -21,6 +21,19 @@ nvm-autocomplete {
 							overflow: hidden;
 							text-overflow: ellipsis;
 						}
+						&__delete {
+							padding: 0;
+							margin: 0;
+							border: 0;
+							background: transparent;
+							outline: none;
+							&:active {
+								outline: none;
+							}
+							&:hover {
+								outline: none;
+							}
+						}
 					}
 				}
 				&__external-content {

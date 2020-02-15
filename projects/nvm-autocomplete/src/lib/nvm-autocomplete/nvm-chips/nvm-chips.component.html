@@ -5,7 +5,9 @@
 		'nvm-chips__item--nosearch': !allowSearch
 	}" (click)="select(item, $event)" [title]="item.label">
 		<nvm-autocomplete-item-outlet [template]="templateOutlet.templateRef" [context]="{$implicit: item}"></nvm-autocomplete-item-outlet>
-		<span *ngIf="allowDelete" class="nvm-chips__item-delete" (click)="delete(item, $event)">✖</span>
+		<div *ngIf="allowDelete" class="nvm-chips__item-delete" (click)="delete(item, $event)">
+			<nvm-delete-chip-outlet [template]="templateDeleteOutlet.templateRef" [context]="{$implicit: item}"></nvm-delete-chip-outlet>
+		</div>
 	</li>
 	<li class="nvm-chips__external-content" [style.opacity]="allowSearch ? '1' : '0'">
 		<ng-content></ng-content>
