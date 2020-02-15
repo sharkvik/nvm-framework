@@ -12,7 +12,7 @@ import { NvmDdButtonOutlet } from './nvm-autocomplete/directives/nvm-dd-button-o
 import { NvmDdButton } from './nvm-autocomplete/directives/nvm-dd-button.directive';
 import { NvmChipDelete } from './nvm-autocomplete/directives/nvm-chip-delete.directive';
 import { NvmDeleteChipOutlet } from './nvm-autocomplete/directives/nvm-delete-chip-outlet.directive';
-import { NvmOverlayModule } from '@nvm/nvm-overlay';
+import { NvmOverlayModule } from 'nvm-overlay';
 
 
 @NgModule({
