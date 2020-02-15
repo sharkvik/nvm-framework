@@ -17,7 +17,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { NvmAutocompleteItem } from '../models/nvm-autocomplete-item';
 import { debounce, isNil } from 'lodash';
 import { NvmAutocompleteElement } from '../directives/nvm-autocomplete-element.directive';
-import { NvmOverlayComponent } from 'nvm-overlay';
+import { NvmOverlayComponent } from '@nvm/nvm-overlay';
 
 export const NVM_SUGGESTIONS_ACCESSOR = {
 	provide: NG_VALUE_ACCESSOR,
