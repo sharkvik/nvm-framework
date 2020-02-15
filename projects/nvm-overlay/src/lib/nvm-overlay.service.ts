@@ -16,8 +16,7 @@ export class NvmOverlayService {
 
 	private _adjustPosition = throttle((ev: Event) => {
 		Array.from(this._overlays.entries())
-			.filter((o: [string, NvmOverlayComponent]) => o[1].isVisible
-				&& ((ev.target as Element).contains(o[1].nativeElement) || (ev.target as Element).contains(o[1].anchorElement)))
+			.filter((o: [string, NvmOverlayComponent]) => o[1].isVisible && this._customContains(ev.target as Element, o[1]))
 			.forEach((o: [string, NvmOverlayComponent]) => o[1].adjust());
 	}, 100);
 
@@ -33,5 +32,9 @@ export class NvmOverlayService {
 		Array.from(this._overlays.entries())
 			.filter((o: [string, NvmOverlayComponent]) => o[1].isVisible && !o[1].contains(ev.target as HTMLElement))
 			.forEach((o: [string, NvmOverlayComponent]) => o[1].hide());
+	}
+
+	private _customContains = (container: Element, element: NvmOverlayComponent) => {
+		return container !== element.nativeElement && (container.contains(element.nativeElement) || container.contains(element.anchorElement));
 	}
 }

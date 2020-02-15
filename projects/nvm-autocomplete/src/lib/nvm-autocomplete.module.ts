@@ -10,6 +10,8 @@ import { NvmChipContent } from './nvm-autocomplete/directives/nvm-chip-content.d
 import { NvmSuggestionContent } from './nvm-autocomplete/directives/nvm-suggestion-content.directive';
 import { NvmDdButtonOutlet } from './nvm-autocomplete/directives/nvm-dd-button-outlet.directive';
 import { NvmDdButton } from './nvm-autocomplete/directives/nvm-dd-button.directive';
+import { NvmChipDelete } from './nvm-autocomplete/directives/nvm-chip-delete.directive';
+import { NvmDeleteChipOutlet } from './nvm-autocomplete/directives/nvm-delete-chip-outlet.directive';
 import { NvmOverlayModule } from '@nvm/nvm-overlay';
 
 
@@ -23,7 +25,9 @@ import { NvmOverlayModule } from '@nvm/nvm-overlay';
 		NvmChipContent,
 		NvmSuggestionContent,
 		NvmDdButtonOutlet,
-		NvmDdButton
+		NvmDdButton,
+		NvmChipDelete,
+		NvmDeleteChipOutlet
 	],
 	imports: [
 		CommonModule,
@@ -39,7 +43,9 @@ import { NvmOverlayModule } from '@nvm/nvm-overlay';
 		NvmChipContent,
 		NvmSuggestionContent,
 		NvmDdButtonOutlet,
-		NvmDdButton
+		NvmDdButton,
+		NvmChipDelete,
+		NvmDeleteChipOutlet
 	]
 })
 export class NvmAutocompleteModule { }

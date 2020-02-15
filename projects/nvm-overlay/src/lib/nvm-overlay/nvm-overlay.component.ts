@@ -130,9 +130,12 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 		const anchorRectangle = this._anchor.getBoundingClientRect();
 		const overlayRectangle = this._host.nativeElement.getBoundingClientRect();
 		const bodyRectangle = document.body.getBoundingClientRect();
-		this._left = Math.min(anchorRectangle.left, bodyRectangle.width - overlayRectangle.width);
+		if (this.adjustWidth) {
+			this._width = anchorRectangle.width;
+		}
+		this._left = Math.min(anchorRectangle.left, bodyRectangle.width - this._width);
 		if (this.align !== 'left') {
-			this._left = Math.max(anchorRectangle.left + anchorRectangle.width - overlayRectangle.width, 0);
+			this._left = Math.max(anchorRectangle.left + anchorRectangle.width - this._width, 0);
 		}
 		if (isNil(this.container)) {
 			this._top = anchorRectangle.bottom;
@@ -143,9 +146,6 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 		const bottomDifference = this._containerRect.bottom - anchorRectangle.bottom - overlayRectangle.height;
 		const topDifference = anchorRectangle.top - this._containerRect.top - overlayRectangle.height;
 
-		if (this.adjustWidth) {
-			this._width = anchorRectangle.width;
-		}
 		if (bottomDifference > 5) {
 			this._top = anchorRectangle.bottom + window.scrollY;
 			this._bottom = undefined;

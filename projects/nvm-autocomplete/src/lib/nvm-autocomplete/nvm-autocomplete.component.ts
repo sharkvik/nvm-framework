@@ -26,6 +26,7 @@ import { Subscription, Observable, of } from 'rxjs';
 import { NvmChipContent } from './directives/nvm-chip-content.directive';
 import { NvmSuggestionContent } from './directives/nvm-suggestion-content.directive';
 import { NvmDdButton } from './directives/nvm-dd-button.directive';
+import { NvmChipDelete } from './directives/nvm-chip-delete.directive';
 
 export const NVM_AUTOCOMPLETE_ACCESSOR = {
 	provide: NG_VALUE_ACCESSOR,
@@ -87,7 +88,9 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	@ViewChild('acInput', { static: true }) public inputControl: ElementRef<HTMLInputElement>;
 	@ViewChild(NvmChipsComponent, { static: true }) public chipsControl: NvmChipsComponent;
 	@ViewChild(NvmSuggestionsComponent, { static: true }) public suggestionsControl: NvmSuggestionsComponent;
+
 	@ContentChild(NvmChipContent, { static: false }) public chipTemplateOutlet: NvmChipContent;
+	@ContentChild(NvmChipDelete, { static: false }) public chipDeleteTemplateOutlet: NvmChipDelete;
 	@ContentChild(NvmSuggestionContent, { static: false }) public suggestionTemplateOutlet: NvmSuggestionContent;
 	@ContentChild(NvmDdButton, { static: false }) public ddTemplateOutlet: NvmDdButton;
 
@@ -136,7 +139,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 			query: this.inputControl.nativeElement.value,
 			originalEvent: ev
 		});
-	}, 300);
+	}, 500);
 
 	private _detectChanges = debounce((): void => {
 		if ((this._cd as ViewRef).destroyed) {

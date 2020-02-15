@@ -17,6 +17,12 @@
 			[context]="{$implicit: item}">
 		</nvm-autocomplete-item-outlet>
 	</div>
+	<button  class="nvm-chip__delete" *nvm-chip-delete="let item">
+		<label *ngIf="!chipDeleteTemplateOutlet">✖</label>
+		<nvm-delete-chip-outlet *ngIf="!!chipDeleteTemplateOutlet" [template]="chipDeleteTemplateOutlet.templateRef"
+			[context]="{$implicit: item}">
+		</nvm-delete-chip-outlet>
+	</button>
 	<input #acInput
 		class="nvm-autocomplete__input"
 		type="text"
