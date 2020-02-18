@@ -17,6 +17,7 @@ import { NvmAutocompleteItem } from '../models/nvm-autocomplete-item';
 import { NvmAutocompleteElement } from '../directives/nvm-autocomplete-element.directive';
 import { isNil, debounce } from 'lodash';
 import { NvmChipDelete } from '../directives/nvm-chip-delete.directive';
+import { DeletionMode } from '../models/deletion-mode.enum';
 
 export const NVM_CHiPS_ACCESSOR = {
 	provide: NG_VALUE_ACCESSOR,
@@ -42,6 +43,7 @@ export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 
 	@Input() public allowDelete: boolean;
 	@Input() public allowSearch: boolean;
+	@Input() public deletionMode: DeletionMode;
 
 	@Attribute('placeholder') public placeholder: string;
 
@@ -148,8 +150,10 @@ export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 		this.itemRemovedLeft.next(this._selectedItem.label);
 		this._selectedItem.selected = false;
 		this.delete(this._selectedItem);
-		this._selectedItem = item;
-		this._selectedItem.selected = true;
+		if (this.deletionMode === DeletionMode.Object) {
+			this._selectedItem = item;
+			this._selectedItem.selected = true;
+		}
 	}
 
 	public clearSelection = (): void => {

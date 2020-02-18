@@ -27,6 +27,7 @@ import { NvmChipContent } from './directives/nvm-chip-content.directive';
 import { NvmSuggestionContent } from './directives/nvm-suggestion-content.directive';
 import { NvmDdButton } from './directives/nvm-dd-button.directive';
 import { NvmChipDelete } from './directives/nvm-chip-delete.directive';
+import { DeletionMode } from './models/deletion-mode.enum';
 
 export const NVM_AUTOCOMPLETE_ACCESSOR = {
 	provide: NG_VALUE_ACCESSOR,
@@ -94,6 +95,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 	@ContentChild(NvmSuggestionContent, { static: false }) public suggestionTemplateOutlet: NvmSuggestionContent;
 	@ContentChild(NvmDdButton, { static: false }) public ddTemplateOutlet: NvmDdButton;
 
+	@Input() public deletionMode: DeletionMode = DeletionMode.Object;
 	@Input() public multiple: boolean = true;
 	@Input() public customSuggestions: NvmAutocompleteItem[] = [];
 	@Input() public dropdown: boolean = false;

@@ -3,6 +3,7 @@
 	[(ngModel)]="innerModel"
 	[allowDelete]="allowDelete"
 	[allowSearch]="allowSearch"
+	[deletionMode]="deletionMode"
 	[ngClass]="{
 		'nvm-autocomplete__input--empty': valueIsEmpty,
 		'nvm-autocomplete__input--single-row': singleRow || !multiple

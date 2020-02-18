@@ -5,5 +5,8 @@
 		&--hover {
 			background-color: rgba(102, 206, 255, 0.15);
 		}
+		&--disabled {
+			color: rgba(black, 0.4);
+		}
 	}
 }
