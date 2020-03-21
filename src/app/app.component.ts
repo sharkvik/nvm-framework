@@ -3,7 +3,6 @@ import { EntityEventHandlerProvider, IEntity, EntityChagesProvider, FieldChanges
 import { Observable } from 'rxjs';
 import { NvmCache } from '@nvm/nvm-cache';
 import { isNil } from 'lodash';
-import * as _ from 'lodash';
 import { NvmSettingsService } from '@nvm/nvm-settings/src/public_api';
 
 export class Model extends IEntity<{ id: string, name: string, type: string }> {
@@ -43,12 +42,14 @@ export class AppComponent implements OnInit {
 		'calculate 3',
 		'3.1',
 		'3.1',
-		'1.5',
 		'calculate 1',
 		'1.2',
 		'calculate 2',
 		'2.2',
 		'2.2',
+		'1.5',
+		'calculate 1',
+		'1.3',
 		'ok',
 		'calculate 2',
 		'2.3',
@@ -85,7 +86,7 @@ export class AppComponent implements OnInit {
 				});
 			});																			// вывод 8 - 2x
 			this._cache.refresh('1', '1.5').subscribe();								// вывод 6
-			setTimeout(() => this._cache.refresh('1').subscribe(() => this._result.push('ok')), 100);				// пропущен, так как прошло только 100мс
+			setTimeout(() => this._cache.refresh('1').subscribe(() => this._result.push('ok')), 100);				// не пропущен
 			setTimeout(() => this._cache.refresh('2').subscribe(() => {					// вывод 9 - 1x
 				this._cache.refresh('3').subscribe(() => {
 					if (JSON.stringify(this._control) === JSON.stringify(this._result)) {

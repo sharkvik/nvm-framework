@@ -1,78 +1,59 @@
-import { isNil } from 'lodash';
-import { ReplaySubject, Observable, Subject, of, Subscriber } from 'rxjs';
+import { isNil, cloneDeep } from 'lodash';
+import { ReplaySubject, Observable, of, Subscriber, throwError } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 
 export class NvmSubject<T> extends ReplaySubject<T> {
 	private _action: () => Observable<T>;
 	private _lastValue: T;
-	private _tempSubjects: Subject<T>[] = [];
 	private _refreshStarted: boolean = false;
-	private _lastRefresh: number;
+	private _subscribers: Array<Subscriber<T>> = [];
 
 	constructor(action: () => Observable<T>) {
 		super(1);
-		this._action = action;
-		this.subscribe((data: T) => this._lastValue = data);
+		this._action = () => action().pipe(tap((data: T) => this._lastValue = data));
 	}
 
 	public refresh(): Observable<T> {
-		if (this._skipRefresh()) {
-			return of(this._lastValue);
+		if (this._refreshStarted) {
+			return new Observable((s: Subscriber<T>) => { this._subscribers.push(s); });
 		}
-		const subj = new Subject<T>();
-		this._tempSubjects.push(subj);
-		if (!this._refreshStarted) {
-			this._refreshStarted = true;
-			setTimeout(() => this._onRefresh());
-		}
-		return subj;
+		this._refreshStarted = true;
+		this._lastValue = undefined;
+		return this._onRefresh();
 	}
 
 	public update(data: T): Observable<T> {
-		return new Observable<T>(s => {
-			this.next(data);
-			this._emit(s);
-		});
+		return of(data || this._lastValue).pipe(tap(() => this.next(data)));
 	}
 
 	public getOnce(): Observable<T> {
-		return new Observable<T>(s => {
-			if (!isNil(this._lastValue)) {
-				this._emit(s);
-				return;
-			}
-			this.refresh().subscribe(() => this._emit(s));
-		});
+		return !isNil(this._lastValue)
+			? of(this._lastValue)
+			: this.refresh();
 	}
 
 	private _onRefresh = () => {
-		this._action()
-			.subscribe((data: T) => {
-				this._lastRefresh = new Date().getTime();
-				this.next(data);
-				this._emitTempSubject();
-			}, (err) => {
-				this._emitTempSubject();
-				console.error(err);
-			});
+		return this._action()
+			.pipe(
+				tap((data: T) => {
+					this.next(data);
+					this._completeRefreshSubscribers();
+				}),
+				catchError((err: any) => {
+					this._completeRefreshSubscribers();
+					console.error(err);
+					return throwError(err);
+				})
+			);
 	}
 
-	private _emit = (s: Subscriber<T>, data?: T): void => {
-		s.next(data || this._lastValue);
-		s.complete();
-	}
-
-	private _emitTempSubject(): void {
-		this._tempSubjects.forEach(s => {
+	private _completeRefreshSubscribers(): void {
+		const subs = cloneDeep(this._subscribers);
+		this._subscribers = [];
+		subs.forEach((s: Subscriber<T>) => {
 			s.next(this._lastValue);
 			s.complete();
 		});
 		this._refreshStarted = false;
-		this._tempSubjects = [];
-	}
-
-	private _skipRefresh = (): boolean => {
-		return !isNil(this._lastValue)
-			&& !isNil(this._lastRefresh)
-			&& this._lastRefresh >= new Date().getTime() - 300;
 	}
 }
