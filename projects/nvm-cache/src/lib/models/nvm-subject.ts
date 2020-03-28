@@ -22,6 +22,10 @@ export class NvmSubject<T> extends ReplaySubject<T> {
 		return this._onRefresh();
 	}
 
+	public reset(): void {
+		this._lastValue = undefined;
+	}
+
 	public update(data: T): Observable<T> {
 		return of(data || this._lastValue).pipe(tap(() => this.next(data)));
 	}

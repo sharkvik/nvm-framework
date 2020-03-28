@@ -1,5 +1,5 @@
 import { NvmSubject } from './nvm-subject';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable, Subscriber, Subscription } from 'rxjs';
 import { isNil } from 'lodash';
 
 export class NvmCache<T> {
@@ -20,7 +20,7 @@ export class NvmCache<T> {
 			: new Observable(s => this._onRefresh(s, id));
 	}
 
-	public remove = (id: string): void => {
+	public delete = (id: string): void => {
 		id = this._prepareKey(id);
 		if (!this._cache.has(id)) {
 			return;
@@ -38,32 +38,44 @@ export class NvmCache<T> {
 	}
 
 	public has = (id: string): boolean => this._cache.has(this._prepareKey(id));
-	public clear = (): void => Array.from(this._cache.keys()).forEach(this.remove);
+	public clear = (): void => Array.from(this._cache.keys()).forEach(this.delete);
+
+	public reset = (id: string): void => {
+		id = this._prepareKey(id);
+		if (!this._cache.has(id)) {
+			return;
+		}
+		this._cache.get(id).reset();
+	}
 
 	private _onUpdate = (s: Subscriber<T>, id: string, data: T) => {
 		if (!this._cache.has(id)) {
-			this._cacheItem(id, data)
+			const subscription = this._cacheItem(id, data)
 				.getOnce()
-				.subscribe((d: T) => this._emit(s, d));
+				.subscribe((d: T) => {
+					this._unsubscribe(subscription);
+					this._emit(s, d);
+				});
 			return;
 		}
-		this._cache
+		const subscription1 = this._cache
 			.get(id)
 			.update(data)
-			.subscribe(() => this._emit(s, data));
+			.subscribe(() => {
+				this._unsubscribe(subscription1);
+				this._emit(s, data);
+			});
 	}
 
 	private _onRefresh = (s: Subscriber<T>, id: string) => {
-		if (!this._cache.has(id)) {
-			this._cacheItem(id)
-				.getOnce()
-				.subscribe((data: T) => this._emit(s, data));
-			return;
-		}
-		this._cache
-			.get(id)
-			.refresh()
-			.subscribe((data: T) => this._emit(s, data));
+		const obs = !this._cache.has(id)
+			? this._cacheItem(id).getOnce()
+			: this._cache.get(id).refresh();
+
+		const subscription = obs.subscribe((data: T) => {
+			this._unsubscribe(subscription);
+			this._emit(s, data);
+		});
 	}
 
 	private _emit = (s: Subscriber<T>, data?: T): void => {
@@ -84,4 +96,9 @@ export class NvmCache<T> {
 
 	private _get = (id: string): NvmSubject<T> => this._cache.has(id) ? this._cache.get(id) : this._cacheItem(id);
 	private _prepareKey = (key: string): string => this._ignoreCase ? key.toUpperCase() : key;
+	private _unsubscribe = (s: Subscription) => {
+		if (!isNil(s) && !s.closed) {
+			s.unsubscribe();
+		}
+	}
 }
