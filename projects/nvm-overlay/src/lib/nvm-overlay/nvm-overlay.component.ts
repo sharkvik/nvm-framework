@@ -149,7 +149,7 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 		if (this.adjustWidth) {
 			this._width = anchorRectangle.width;
 		}
-		this._width = this._width || 300;
+		this._width = this._width || overlayRectangle.width || 300;
 		this._left = Math.min(anchorRectangle.left, bodyRectangle.width - this._width);
 		if (this.align !== 'left') {
 			this._left = Math.max(anchorRectangle.left + anchorRectangle.width - this._width, 0);
