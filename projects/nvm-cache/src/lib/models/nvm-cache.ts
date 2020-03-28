@@ -49,21 +49,22 @@ export class NvmCache<T> {
 	}
 
 	private _onUpdate = (s: Subscriber<T>, id: string, data: T) => {
+		let subscription: Subscription;
 		if (!this._cache.has(id)) {
-			const subscription = this._cacheItem(id, data)
+			subscription = this._cacheItem(id, data)
 				.getOnce()
 				.subscribe((d: T) => {
-					this._unsubscribe(subscription);
 					this._emit(s, d);
+					setTimeout(() => this._unsubscribe(subscription));
 				});
 			return;
 		}
-		const subscription1 = this._cache
+		subscription = this._cache
 			.get(id)
 			.update(data)
 			.subscribe(() => {
-				this._unsubscribe(subscription1);
 				this._emit(s, data);
+				setTimeout(() => this._unsubscribe(subscription));
 			});
 	}
 
@@ -73,8 +74,8 @@ export class NvmCache<T> {
 			: this._cache.get(id).refresh();
 
 		const subscription = obs.subscribe((data: T) => {
-			this._unsubscribe(subscription);
 			this._emit(s, data);
+			setTimeout(() => this._unsubscribe(subscription));
 		});
 	}
 

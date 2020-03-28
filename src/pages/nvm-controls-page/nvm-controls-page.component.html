@@ -83,7 +83,7 @@
 				{{'{' + item.label + '}: [' + item.value + ']'}}
 			</span>
 		</nvm-autocomplete>
-		<nvm-autocomplete placeholder="123456" class="autocomplete__6" (complete)="search6($event)" [(ngModel)]="acModel6" [(suggestions)]="acSuggestions6" (focus)="onfocus6(ov1)"></nvm-autocomplete>
+		<nvm-autocomplete placeholder="123456" class="autocomplete__6" (complete)="search6($event)" [(ngModel)]="acModel6" [(suggestions)]="acSuggestions6" (focused)="onfocus6(ov1)"></nvm-autocomplete>
 		<span #anch></span>
 		<nvm-overlay #ov1 [style.width]="'500px'" [style.height]="'500px'" [container]="'body'" [anchor]="anch"
 			[appendTo]="'body'">

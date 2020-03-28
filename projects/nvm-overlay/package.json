@@ -1,6 +1,6 @@
 {
 	"name": "nvm-overlay",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"description": "simple overlay",
 	"homepage": "https://github.com/sharkvik/nvm-framework/blob/master/README.md",
 	"bugs": {

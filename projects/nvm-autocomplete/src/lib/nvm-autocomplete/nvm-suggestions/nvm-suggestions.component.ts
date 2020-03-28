@@ -11,7 +11,8 @@ import {
 	ContentChild,
 	ViewChild,
 	Output,
-	EventEmitter
+	EventEmitter,
+	OnDestroy
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { NvmAutocompleteItem } from '../models/nvm-autocomplete-item';
@@ -33,7 +34,7 @@ export const NVM_SUGGESTIONS_ACCESSOR = {
 	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
+export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor, OnDestroy {
 	@Output() public selected: EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }>
 		= new EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }>();
 
@@ -46,12 +47,19 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 	public disabled: boolean = false;
 	public model: Set<NvmAutocompleteItem>;
 	@ContentChild(NvmAutocompleteElement, { static: false }) public templateOutlet: NvmAutocompleteElement;
-	@ViewChild('overlay', { static: false }) public overlay: NvmOverlayComponent;
+	@ViewChild(NvmOverlayComponent, { static: false }) public overlay: NvmOverlayComponent;
 
 	private _hoverred: NvmAutocompleteItem;
 	private _detectChangesDebounced = debounce(() => this._detectChanges(), 100);
+	private _cursorIn: boolean;
+	private _byKeyboard: boolean;
 
 	constructor(private _cd: ChangeDetectorRef) { }
+
+	public ngOnDestroy(): void {
+		this._cd.detach();
+	}
+
 	public ngOnInit() {
 
 	}
@@ -69,6 +77,11 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 		item.selected = true;
 		this._hoverred = item;
 		this._detectChanges();
+		if (this._cursorIn && !this._byKeyboard) {
+			this._byKeyboard = false;
+			return;
+		}
+		this._byKeyboard = false;
 		const hverred = this.overlay.nativeElement.querySelector('.nvm-suggestions__item--hover');
 		if (isNil(hverred)) {
 			return;
@@ -113,9 +126,10 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 	}
 
 	public hoverTop = (): void => {
+		this._byKeyboard = true;
 		const model = Array.from(this.model);
 		const selectedIndex = model.indexOf(this._hoverred);
-		if (isNil(this._hoverred) || selectedIndex === 0) {
+		if (isNil(this._hoverred) || selectedIndex <= 0) {
 			this.hover(model[this.model.size - 1]);
 			return;
 		}
@@ -123,6 +137,7 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 	}
 
 	public hoverBottom = (): void => {
+		this._byKeyboard = true;
 		const model = Array.from(this.model);
 		const selectedIndex = model.indexOf(this._hoverred);
 		if (isNil(this._hoverred) || selectedIndex === model.length - 1) {
@@ -152,6 +167,10 @@ export class NvmSuggestionsComponent implements OnInit, ControlValueAccessor {
 		}
 		this._hoverred.selected = false;
 		this._hoverred = undefined;
+	}
+
+	public mouseIn = (ev: { inside: boolean, event: MouseEvent }): void => {
+		this._cursorIn = ev.inside;
 	}
 
 	private _detectChanges(): void {

@@ -9,12 +9,13 @@ import {
 	ChangeDetectorRef,
 	ViewRef,
 	Output,
-	EventEmitter
+	EventEmitter,
+	HostListener
 } from '@angular/core';
-import { isNil } from 'lodash';
 import { Subscription, Subject, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { NvmOverlayService } from '../nvm-overlay.service';
+import { isNil } from 'lodash';
 
 @Component({
 	selector: 'nvm-overlay',
@@ -26,6 +27,7 @@ import { NvmOverlayService } from '../nvm-overlay.service';
 export class NvmOverlayComponent implements OnInit, OnDestroy {
 	@Output() public openned: EventEmitter<any> = new EventEmitter<any>();
 	@Output() public closed: EventEmitter<any> = new EventEmitter<any>();
+	@Output() public mouseIn: EventEmitter<{ inside: boolean, event: MouseEvent }> = new EventEmitter<{ inside: boolean, event: MouseEvent }>();
 
 	@Input() public appendTo: ElementRef<HTMLElement> | HTMLElement | string;
 	@Input() public anchor: ElementRef<HTMLElement> | HTMLElement;
@@ -65,6 +67,7 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 	private _width: number;
 	private _containerRect: any;
 	private _initialStyles: CSSStyleDeclaration;
+	private _cursorIn: boolean = false;
 
 	constructor(private _host: ElementRef<HTMLElement>, private _cd: ChangeDetectorRef, private _overlayService: NvmOverlayService) {
 		this.id = this._newGuid;
@@ -91,6 +94,7 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 	public ngOnDestroy(): void {
 		this._subscriptions.unsubscribe();
 		this._overlayService.remove(this.id);
+		this._cd.detach();
 	}
 
 	public contains = (element: HTMLElement): boolean => {
@@ -122,6 +126,18 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 		this._adjust();
 	}
 
+	@HostListener('mouseenter', ['$event'])
+	public cursorIn(ev: MouseEvent): void {
+		this._cursorIn = true;
+		this.mouseIn.emit({ inside: this._cursorIn, event: ev });
+	}
+
+	@HostListener('mouseleave', ['$event'])
+	public cursorOut(ev: MouseEvent): void {
+		this._cursorIn = false;
+		this.mouseIn.emit({ inside: this._cursorIn, event: ev });
+	}
+
 	private _calculatePosition = (): void => {
 		this.position = 'bottom';
 		if (isNil(this._appendTo) || isNil(this._anchor)) {
@@ -133,6 +149,7 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 		if (this.adjustWidth) {
 			this._width = anchorRectangle.width;
 		}
+		this._width = this._width || 300;
 		this._left = Math.min(anchorRectangle.left, bodyRectangle.width - this._width);
 		if (this.align !== 'left') {
 			this._left = Math.max(anchorRectangle.left + anchorRectangle.width - this._width, 0);
@@ -145,7 +162,23 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 		this._containerRect = this._container.getBoundingClientRect();
 		const bottomDifference = this._containerRect.bottom - anchorRectangle.bottom - overlayRectangle.height;
 		const topDifference = anchorRectangle.top - this._containerRect.top - overlayRectangle.height;
-
+		if (!this.adjustHeight) {
+			this._top = anchorRectangle.bottom + window.scrollY;
+			this._bottom = undefined;
+		} else {
+			if (topDifference > bottomDifference) {
+				this.position = 'top';
+				this._bottom = window.innerHeight - anchorRectangle.top - window.scrollY;
+				this._maxHeight = anchorRectangle.top - this._containerRect.top;
+				this._top = undefined;
+			} else {
+				this._top = anchorRectangle.bottom + window.scrollY;
+				this._maxHeight = this._containerRect.bottom - anchorRectangle.bottom;
+			}
+		}
+		if (!isNil(this.maxHeight)) {
+			this._maxHeight = Math.min(this.maxHeight, this._maxHeight);
+		}
 		if (bottomDifference > 5) {
 			this._top = anchorRectangle.bottom + window.scrollY;
 			this._bottom = undefined;
@@ -156,23 +189,6 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 			this._bottom = window.innerHeight - anchorRectangle.top - window.scrollY;
 			this._top = undefined;
 			return;
-		}
-		if (!this.adjustHeight) {
-			this._top = anchorRectangle.bottom + window.scrollY;
-			this._bottom = undefined;
-			return;
-		}
-		if (topDifference > bottomDifference) {
-			this.position = 'top';
-			this._bottom = window.innerHeight - anchorRectangle.top - window.scrollY;
-			this._maxHeight = anchorRectangle.top - this._containerRect.top;
-			this._top = undefined;
-		} else {
-			this._top = anchorRectangle.bottom + window.scrollY;
-			this._maxHeight = this._containerRect.bottom - anchorRectangle.bottom;
-		}
-		if (!isNil(this.maxHeight)) {
-			this._maxHeight = Math.min(this.maxHeight, this._maxHeight);
 		}
 	}
 

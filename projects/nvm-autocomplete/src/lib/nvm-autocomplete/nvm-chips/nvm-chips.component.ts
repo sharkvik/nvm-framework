@@ -10,7 +10,8 @@ import {
 	Output,
 	EventEmitter,
 	Input,
-	Attribute
+	Attribute,
+	OnDestroy
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NvmAutocompleteItem } from '../models/nvm-autocomplete-item';
@@ -34,8 +35,7 @@ export const NVM_CHiPS_ACCESSOR = {
 	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NvmChipsComponent implements ControlValueAccessor, OnInit {
-	constructor(private _cd: ChangeDetectorRef) { }
+export class NvmChipsComponent implements ControlValueAccessor, OnInit, OnDestroy {
 	@Output() public selected: EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }>
 		= new EventEmitter<{ item: NvmAutocompleteItem, originalEvent: MouseEvent }>();
 	@Output() public deleted: EventEmitter<NvmAutocompleteItem> = new EventEmitter<NvmAutocompleteItem>();
@@ -62,6 +62,12 @@ export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 		this._cd.detectChanges();
 	}, 100);
 
+	constructor(private _cd: ChangeDetectorRef) { }
+
+	public ngOnDestroy(): void {
+		this._cd.detach();
+	}
+
 	public ngOnInit() {
 	}
 
@@ -73,6 +79,7 @@ export class NvmChipsComponent implements ControlValueAccessor, OnInit {
 		if (!this.allowDelete) {
 			return;
 		}
+		this._selectedItem = null;
 		this.model.delete(item);
 		this.onModelChange(Array.from(this.model.values()));
 		this.deleted.emit(item);

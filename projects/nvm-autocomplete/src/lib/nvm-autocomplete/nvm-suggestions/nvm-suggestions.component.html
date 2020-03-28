@@ -1,9 +1,10 @@
-<nvm-overlay #overlay class="nvm-suggestions"
+<nvm-overlay class="nvm-suggestions"
 	[appendTo]="appendTo"
 	[anchor]="anchor"
 	[container]="container"
 	[adjustWidth]="adjustWidth"
 	[adjustHeight]="adjustHeight"
+	(mouseIn)="mouseIn($event)"
 	(closed)="onClosed()">
 	<div *ngFor="let item of model; trackBy:trackByValue" class="nvm-suggestions__item" [ngClass]="{
 			'nvm-suggestions__item--hover': item.selected && !item.disabled,

@@ -1,4 +1,4 @@
-<span (mousedown)="focused($event)" class="nvm-autocomplete__placeholder" *ngIf="placeholder && !innerModel?.length && valueIsEmpty" [innerText]="placeholder"></span>
+<span (mousedown)="onFocus($event)" class="nvm-autocomplete__placeholder" *ngIf="placeholder && !innerModel?.length && valueIsEmpty" [innerText]="placeholder"></span>
 <nvm-chips class="nvm-autocomplete__chips"
 	[(ngModel)]="innerModel"
 	[allowDelete]="allowDelete"
@@ -18,19 +18,24 @@
 			[context]="{$implicit: item}">
 		</nvm-autocomplete-item-outlet>
 	</div>
-	<button  class="nvm-chip__delete" *nvm-chip-delete="let item">
-		<label *ngIf="!chipDeleteTemplateOutlet">✖</label>
-		<nvm-delete-chip-outlet *ngIf="!!chipDeleteTemplateOutlet" [template]="chipDeleteTemplateOutlet.templateRef"
-			[context]="{$implicit: item}">
-		</nvm-delete-chip-outlet>
-	</button>
+	<ng-container *ngIf="!chipDeleteTemplateOutlet">
+		<label class="nvm-chip__delete" *nvm-chip-delete="let item">✖</label>
+	</ng-container>
+	<ng-container *ngIf="chipDeleteTemplateOutlet">
+		<button class="nvm-chip__delete" data-test="autocomplete.remove" *nvm-chip-delete="let item">
+			<nvm-delete-chip-outlet *ngIf="!!chipDeleteTemplateOutlet" [template]="chipDeleteTemplateOutlet.templateRef"
+				[context]="{$implicit: item}">
+			</nvm-delete-chip-outlet>
+		</button>
+	</ng-container>
 	<input #acInput
 		class="nvm-autocomplete__input"
 		type="text"
+		(keyUp)="onKeyUp($event)"
 		(input)="onInput($event)" />
 </nvm-chips>
 <ng-container *ngIf="dropdown">
-	<button *ngIf="!ddTemplateOutlet" (click)="dropDownClicked($event)">˅</button>
+	<button class="nvm-dd-button" *ngIf="!ddTemplateOutlet" (click)="dropDownClicked($event)">˅</button>
 	<nvm-dd-button-outlet *ngIf="ddTemplateOutlet" [template]="ddTemplateOutlet.templateRef"
 		[context]="{$implicit: dropDownClicked}">
 	</nvm-dd-button-outlet>
