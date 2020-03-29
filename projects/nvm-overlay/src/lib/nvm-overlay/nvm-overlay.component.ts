@@ -88,6 +88,9 @@ export class NvmOverlayComponent implements OnInit, OnDestroy {
 		}));
 		this._appendTo = this.appendTo === 'body' ? document.body : (this.appendTo as ElementRef<HTMLElement>).nativeElement || (this.appendTo as HTMLElement);
 		this._anchor = (this.anchor as ElementRef<HTMLElement>).nativeElement || (this.anchor as HTMLElement);
+		if (!isNil(this._anchor)) {
+			this._anchor.setAttribute('data-autocomplete-id', this.id);
+		}
 		this._container = this.container === 'body' ? document.body : (this.container as ElementRef<HTMLElement>).nativeElement || (this.container as HTMLElement);
 	}
 

@@ -9,7 +9,6 @@ async function bundleScss() {
 
 	if (imports) {
 		const cwd = process.cwd();
-
 		const filesNotFound = imports
 			.filter(x => !x.found)
 			.map(x => relative(cwd, x.filePath));
