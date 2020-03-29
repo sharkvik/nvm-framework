@@ -87,7 +87,7 @@ export class NvmAutocompleteComponent implements OnInit, ControlValueAccessor, O
 		}
 	}
 
-	@ViewChild('acInput', { static: false }) public inputControl: ElementRef<HTMLInputElement>;
+	@ViewChild('acInput', {static: false}) public inputControl: ElementRef<HTMLInputElement>;
 	@ViewChild(NvmChipsComponent, { static: false }) public chipsControl: NvmChipsComponent;
 	@ViewChild(NvmSuggestionsComponent, { static: false }) public suggestionsControl: NvmSuggestionsComponent;
 

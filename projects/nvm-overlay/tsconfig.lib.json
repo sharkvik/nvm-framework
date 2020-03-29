@@ -4,7 +4,7 @@
 		"outDir": "../../out-tsc/lib",
 		"target": "es2015",
 		"declaration": true,
-		"inlineSources": true,
+		"inlineSources": false,
 		"types": [],
 		"lib": [
 			"dom",
@@ -12,7 +12,6 @@
 		]
 	},
 	"angularCompilerOptions": {
-		"annotateForClosureCompiler": true,
 		"skipTemplateCodegen": true,
 		"strictMetadataEmit": true,
 		"fullTemplateTypeCheck": true,

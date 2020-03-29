@@ -7,7 +7,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 	providers: [HttpClient]
 })
 export class NvmSettingsModule {
-	static forRoot(): ModuleWithProviders {
+	static forRoot(): ModuleWithProviders<NvmSettingsModule> {
 		return {
 			ngModule: NvmSettingsModule,
 			providers: [NvmSettingsModule]

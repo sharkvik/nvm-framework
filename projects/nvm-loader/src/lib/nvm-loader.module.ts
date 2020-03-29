@@ -12,7 +12,7 @@ import { NvmLoaderComponent } from './nvm-loader.component';
   exports: [NvmLoaderComponent]
 })
 export class NvmLoaderModule {
-  static forRoot(lazyRoutes: Route[]): ModuleWithProviders {
+  static forRoot(lazyRoutes: Route[]): ModuleWithProviders<NvmLoaderModule> {
     return {
       ngModule: NvmLoaderModule,
       providers: [
@@ -21,7 +21,7 @@ export class NvmLoaderModule {
       ]
     };
   }
-  static forChild(lazyRoutes: Route[]): ModuleWithProviders {
+  static forChild(lazyRoutes: Route[]): ModuleWithProviders<NvmLoaderModule> {
     return {
       ngModule: NvmLoaderModule,
       providers: [
