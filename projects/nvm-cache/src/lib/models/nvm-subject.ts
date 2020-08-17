@@ -34,6 +34,10 @@ export class NvmSubject<T> extends ReplaySubject<T> {
 		});
 	}
 
+	public reset = (): void => {
+		this._lastValue = undefined;
+	}
+
 	public getOnce(): Observable<T> {
 		return new Observable<T>(s => {
 			if (!isNil(this._lastValue)) {

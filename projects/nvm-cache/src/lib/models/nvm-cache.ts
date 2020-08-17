@@ -20,13 +20,17 @@ export class NvmCache<T> {
 			: new Observable(s => this._onRefresh(s, id));
 	}
 
-	public remove = (id: string): void => {
+	public remove = (id: string, soft: boolean = false): void => {
 		id = this._prepareKey(id);
 		if (!this._cache.has(id)) {
 			return;
 		}
-		this._cache.get(id).complete();
-		this._cache.delete(id);
+		if (!soft) {
+			this._cache.get(id).complete();
+			this._cache.delete(id);
+		} else {
+			this._cache.get(id).reset();
+		}
 	}
 
 	public get keys(): string[] {
@@ -38,7 +42,7 @@ export class NvmCache<T> {
 	}
 
 	public has = (id: string): boolean => this._cache.has(this._prepareKey(id));
-	public clear = (): void => Array.from(this._cache.keys()).forEach(this.remove);
+	public clear = (): void => Array.from(this._cache.keys()).forEach((x: string) => this.remove(x));
 
 	private _onUpdate = (s: Subscriber<T>, id: string, data: T) => {
 		if (!this._cache.has(id)) {
