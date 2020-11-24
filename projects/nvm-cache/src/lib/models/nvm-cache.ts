@@ -1,8 +1,10 @@
 import { NvmSubject } from './nvm-subject';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable, Subject, Subscriber } from 'rxjs';
 import { isNil } from 'lodash';
+import { takeUntil } from 'rxjs/operators';
 
 export class NvmCache<T> {
+	private _destroy$: Subject<any> = new Subject<any>();
 	private _cache: Map<string, NvmSubject<T>> = new Map<string, NvmSubject<T>>();
 
 	constructor(
@@ -43,17 +45,24 @@ export class NvmCache<T> {
 
 	public has = (id: string): boolean => this._cache.has(this._prepareKey(id));
 	public clear = (): void => Array.from(this._cache.keys()).forEach((x: string) => this.remove(x));
+	public destroy = (): void => {
+		this.clear();
+		this._destroy$.next();
+		this._destroy$.complete();
+	}
 
 	private _onUpdate = (s: Subscriber<T>, id: string, data: T) => {
 		if (!this._cache.has(id)) {
 			this._cacheItem(id, data)
 				.getOnce()
+				.pipe(takeUntil(this._destroy$))
 				.subscribe((d: T) => this._emit(s, d));
 			return;
 		}
 		this._cache
 			.get(id)
 			.update(data)
+			.pipe(takeUntil(this._destroy$))
 			.subscribe(() => this._emit(s, data));
 	}
 
@@ -61,12 +70,14 @@ export class NvmCache<T> {
 		if (!this._cache.has(id)) {
 			this._cacheItem(id)
 				.getOnce()
+				.pipe(takeUntil(this._destroy$))
 				.subscribe((data: T) => this._emit(s, data));
 			return;
 		}
 		this._cache
 			.get(id)
 			.refresh()
+			.pipe(takeUntil(this._destroy$))
 			.subscribe((data: T) => this._emit(s, data));
 	}
 
@@ -81,7 +92,7 @@ export class NvmCache<T> {
 		if (!isNil(itemData)) {
 			item.next(itemData);
 		} else {
-			item.refresh().subscribe();
+			item.refresh().pipe(takeUntil(this._destroy$)).subscribe();
 		}
 		return item;
 	}

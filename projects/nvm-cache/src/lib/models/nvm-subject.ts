@@ -1,7 +1,9 @@
 import { isNil } from 'lodash';
 import { ReplaySubject, Observable, Subject, of, Subscriber } from 'rxjs';
+import { tap, takeUntil } from 'rxjs/operators';
 
 export class NvmSubject<T> extends ReplaySubject<T> {
+	private _destroy$: Subject<any> = new Subject<any>();
 	private _action: () => Observable<T>;
 	private _lastValue: T;
 	private _tempSubjects: Subject<T>[] = [];
@@ -11,7 +13,13 @@ export class NvmSubject<T> extends ReplaySubject<T> {
 	constructor(action: () => Observable<T>) {
 		super(1);
 		this._action = action;
-		this.subscribe((data: T) => this._lastValue = data);
+		this
+			.pipe(
+				takeUntil(this._destroy$),
+				tap((data: T) => this._lastValue = data)
+			).subscribe((data: T) => {
+				this._emitTempSubject();
+			});
 	}
 
 	public refresh(): Observable<T> {
@@ -44,12 +52,19 @@ export class NvmSubject<T> extends ReplaySubject<T> {
 				this._emit(s);
 				return;
 			}
-			this.refresh().subscribe(() => this._emit(s));
+			this.refresh().pipe(takeUntil(this._destroy$)).subscribe(() => this._emit(s));
 		});
+	}
+
+	public complete() {
+		this._destroy$.next();
+		this._destroy$.complete();
+		super.complete();
 	}
 
 	private _onRefresh = () => {
 		this._action()
+			.pipe(takeUntil(this._destroy$))
 			.subscribe((data: T) => {
 				this._lastRefresh = new Date().getTime();
 				this.next(data);
