@@ -17,7 +17,7 @@
 		"lodash": "^4.17.15"
 	},
 	"devDependencies": {
-		"ng-packagr": "^5.7.1",
+		"ng-packagr": "^10.1.1",
 		"scss-bundle": "^3.0.2",
 		"ts-node": "^8.6.1"
 	},
